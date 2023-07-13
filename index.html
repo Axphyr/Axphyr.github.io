@@ -1,29 +1,237 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-        <title> Axphyr </title>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" type="text/css" href="public/css/style.css" />
-        <link rel="icon" type="image/png" href="public/img/coincoin.jpg">
-
+    <title>Axphyr's page</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="public/css/style.css" />
+    <link rel="icon" type="image/png" href="public/img/coincoin.jpg">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap" rel="stylesheet">
 </head>
         <body>
-            <div class="pr_picture">
-                <img src="public/img/coincoin.jpg" alt="Profile Picture">
+            <nav class="navbar">
+                <div class="propos" onclick="redirectToSection('a_propos')">À propos</div>
+                <div class="parcours" onclick="redirectToSection('parcours')">Parcours</div>
+                <div class="competences" onclick="redirectToSection('competences')">Compétences</div>
+                <div class="experience" onclick="redirectToSection('experience')">Expérience</div>
+            </nav>
+            <header class="header" id="header">
+                <div class="header-overlay">
+                    <h1 class="header-text">Arbër Jonuzi</h1>
+                    <h1 class="header-text">Développeur Web Full Stack</h1>
+                </div>
+                <div id="particles-js"></div>
+                <div class="content text-md-center"></div>
+            </header>
+
+            <main>
+                <div class="intitule">
+                    <div class="intitule__text" id="a_propos">à propos</div>
+                </div>
+
+                <div class="card" data-aos="fade-left">
+                    <h1>Moi</h1>
+                    <div class="content">
+                        <p>
+                            Je suis un passionnée d'informatique et de
+                            création de site internet en 3ème année à
+                            l'Université de Reims Champagne-Ardenne dans
+                            l'Institut Universitaire de Technologie dans le
+                            département informatique et je suis à la
+                            recherche d'une alternance pour clôturer ma 3ème
+                            année. <br>
+                            Je recherche une alternance dans le développpement
+                            Web en Ile-de-France à partir de début septembre. <br>
+                            Vous avez dans la suite de ce portfolio les  informations
+                            complémentaires sur qui je suis et sur mes compétences. <br>
+                            J'espère que celui-ci pourra vous montrer un peu plus
+                            mes compétences dans ce domaine.
+                        </p>
+                    </div>
+
+                </div>
+                <div class="card" data-aos="fade-right">
+                    <h1>Informatique</h1>
+                    <div class="content">
+                        <p>L'informatique occupe une grande place en moi
+                        depuis ma jeunesse. <br>
+                        Je suis un fan de tout ce qui touche l'informatique
+                        et le web en général. J'aime créer des petits programmes
+                        dans mon temps libre pour m'amuser ou en parler avec
+                        mes amis qui partagent cette passion. <br>
+                        C'est une des raisons pour lesquelles j'ai fais mon
+                        stage de 3ème dans une entreprise de réparation d'outils
+                        informatiques ainsi que mon stage de 2ème année (de 3 mois)
+                        dans les locaux de l'ISTeP.  <br>
+                        J'aimerais continuer cette passion dans ma 3ème année
+                        avec une alternance dans le développement Web
+                        en tant que développeur Web Full Stack.
+                        </p>
+                    </div>
+                </div>
+                <div class="card" data-aos="fade-left">
+                    <h1>Art</h1>
+                    <div class="content">
+                        <p>Passionné par l'art, j'aime l'acte créatif en lui-même. De cela découle une
+                            passion pour l'informatique qui allie art et création. Dès que possible, je dessine
+                            ou crée des œuvres avec tout type de matériaux. <br>
+                            Je passe une partie de mon temps libre dans l'étude de fonctions ou d'objets
+                            informatiques afin de satisfaire cette curiosité. <br>
+                            Je porte un grand intérêt pour la littérature, particulièrement anglo-saxonne.
+                            Autodidacte dans le piano, j'ai appris certaines pièces qui ont permis de
+                            développer ma concentration.</p>
+                    </div>
+                </div>
+
+                <div class="intitule">
+                    <div class="intitule__text" id="parcours">Parcours</div>
+                </div>
+
+                <div data-aos="fade-right">
+                    <div class="vertical-bar">
+                        <ul class="points">
+                            <li data-aos="fade-left"></li>
+
+                        </ul>
+                        <div class="info" data-aos="fade-left">
+                            <li class="info-item" data-aos="fade-left">Collège Robert Schuman (Obtention Brevet)</li>
+                            <ul></ul>
+                            <li class="info-item" data-aos="fade-left">Lycée Clémenceau (Obtention Baccalauréat)</li>
+                            <ul></ul>
+                            <li class="info-item" data-aos="fade-left">Institut Universitaire de Technologie URCA (3ème année)</li>
+                            <p data-aos="fade-up"
+                               data-aos-anchor-placement="top-bottom">v</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="intitule">
+                    <div class="intitule__text" id="competences">Compétences</div>
+                </div>
+
+                <div class="card" data-aos="fade-left">
+                    <h1>Back-end</h1>
+                    <div class="content">
+                        <p>
+                            - Utilisation des technologies PHP avec Symfony. <br>
+                            - Utilisation des technologies C# avec .NET Core et .NET Framework. <br>
+                            - Réalisation de projets en PHP avec les bibliothèques MyPDO & PDO, ainsi qu'en PHP natif. <br>
+                            - Expérience dans la mise en place de tests unitaires et de tests d'intégration avec Codeception & PHPUnit. <br>
+                            - Utilisation d'API en PHP avec API Platforme. <br>
+                            - Utilisation de bases de données MySQL, Oracle & NoSQL, ainsi qu'un peu de MongoDB.
+                        </p>
+                    </div>
+                </div>
+                <div class="card" data-aos="fade-right">
+                    <h1>Front-end</h1>
+                    <div class="content">
+                        <p>
+                            - Utilisation d'HTML pour le squelette de la page, bien que la majorité soit gérée en back-end. <br>
+                            - Utilisation de la technologie CSS pour le style des pages, ainsi que les modules Flexbox pour un rendu responsive. <br>
+                            - Utilisation de JavaScript pour ajouter du style, des animations et améliorer l'interactivité du site. <br>
+                            - Utilisation de React pour le développement front-end, avec l'utilisation de composants réutilisables. <br>
+                            - Utilisation d'Ajax pour des requêtes asynchrones et dynamiques.
+                        </p>
+                    </div>
+                </div>
+                <div class="card" data-aos="fade-left">
+                    <h1>Programmation Système & DevOps</h1>
+                    <div class="content">
+                        <p>
+                            - Utilisation de PHP pour la gestion de fichiers. <br>
+                            - Utilisation de C# pour créer un petit programme similaire à Git. <br>
+                            - Création de jeux en ligne de commande avec des interfaces en utilisant C#. <br>
+                            - Expérience de programmation système sous Linux et Windows. <br>
+                            - Mise en place de serveurs web en utilisant Apache et WordPress. <br>
+                            - Utilisation de Docker pour la gestion des conteneurs et la mise en place d'environnements de développement.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card" data-aos="fade-right">
+                    <h1>Algorithmes</h1>
+                    <div class="content">
+                        <p>
+                            - Utilisation intensive de Python dans le domaine des mathématiques, en implémentant des algorithmes de probabilités, de manipulation de matrices, d'arbres pondérés, etc. <br>
+                            - Réalisation de projets en Python, notamment la création et la résolution de labyrinthes. <br>
+                            - Utilisation de PHP avec une approche orientée objet pour implémenter des algorithmes. <br>
+                            - Utilisation de C# pour la gestion d'automates, la création de petits jeux et la résolution de problèmes algorithmiques.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="intitule" id>
+                    <div class="intitule__text" id="experience">Expérience</div>
+                </div>
+
+                <div class="card" data-aos="fade-right">
+                    <h1>Sorbonne Université - Institut des Sciences de la Terre de Paris</h1>
+                    <div class="content">
+                        <p>
+                            - Recueil de besoins <br>
+                            - Travail d'équipe <br>
+                            - Dévéloppement back-end (PHP) <br>
+                            - Autonomie <br>
+                            - Dévelopement front-end (CSS, JS) <br>
+                            - Déploiement site (Apache) <br>
+                            - WordPress <br>
+                            - Plugins WordPress <br>
+                            - Thèmes enfants WordPress
+                        </p>
+                    </div>
+
+                </div>
+                <div class="card" data-aos="fade-left">
+                    <h1>Happy Cash</h1>
+                    <div class="content">
+                        <p>
+                            - Autonomie <br>
+                            - Réparation outils informatique <br>
+                            - Conseil clientèle <br>
+                            - Organisation <br>
+                            - Travail d'équipe
+                        </p>
+                    </div>
+                </div>
+            </main>
+
+
+            <footer>
+                <p>Réseaux Sociaux</p>
+
+                <div class="networks">
+                    <a href="https://github.com/Axphyr" target="_blank"
+                       data-aos="fade-right"
+                       data-aos-delay="100">
+                        <img src="public/img/github.png" alt="github">
+                    </a>
+                    <a href="https://www.instagram.com/arrjnz/" target="_blank"
+                       data-aos="fade-right"
+                       data-aos-delay="200">
+                        <img src="public/img/instagram.png" alt="instagram">
+                    </a>
+                    <a href="https://twitter.com/axphyr" target="_blank"
+                       data-aos="fade-right"
+                       data-aos-delay="300">
+                        <img src="public/img/twitter.png" alt="twitter">
+                    </a>
+                </div>
+            </footer>
+
+            <div id="scrollButtonContainer" onclick="window.location.href='#header'">
+                <button id="scrollButton">↑</button>
             </div>
 
-            <p onClick="window.location.reload();">Axphyr</p>
-
-            <div class="networks">
-                <a href="https://github.com/Axphyr" target="_blank">
-                        <img src="public/img/github.png">
-                    </a>
-                    <a href="https://www.instagram.com/arrjnz/" target="_blank">
-                        <img src="public/img/instagram.png">
-                    </a>
-                    <a href="https://twitter.com/axphyr" target="_blank">
-                        <img src="public/img/twitter.png">
-                    </a>
-            </div>
+            <script src="public/js/jquery-3.1.1.min.js"></script>
+            <script src="public/js/particles.min.js"></script>
+            <script src="public/js/app.js"></script>
+            <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+            <script src="public/js/script.js"></script>
+            <script>
+                AOS.init();
+            </script>
         </body>
 </html>
