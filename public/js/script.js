@@ -27,8 +27,6 @@ function redirectToSection(sectionId) {
     const element = document.getElementById(sectionId);
     if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
-        setTimeout(function() {
-            window.scrollBy(0, -150); // Scroll up by 30 pixels
-        }, 500); // Adjust the delay as needed
     }
 }
+

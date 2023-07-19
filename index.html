@@ -11,11 +11,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap" rel="stylesheet">
 </head>
         <body>
-            <nav class="navbar">
-                <div class="propos" onclick="redirectToSection('a_propos')">À propos</div>
-                <div class="parcours" onclick="redirectToSection('parcours')">Parcours</div>
-                <div class="competences" onclick="redirectToSection('competences')">Compétences</div>
-                <div class="experience" onclick="redirectToSection('experience')">Expérience</div>
+        <div id="up_there"></div>
+
+        <nav class="navbar">
+                <div class="propos" onclick="redirectToSection('a__propos')">À propos</div>
+                <div class="parcours" onclick="redirectToSection('parours')">Parcours</div>
+                <div class="competences" onclick="redirectToSection('comp')">Compétences</div>
+                <div class="experience" onclick="redirectToSection('exp')">Expérience</div>
             </nav>
             <header class="header" id="header">
                 <div class="header-overlay">
@@ -27,6 +29,7 @@
             </header>
 
             <main>
+                <div id="a__propos"></div>
                 <div class="intitule">
                     <div class="intitule__text" id="a_propos">à propos</div>
                 </div>
@@ -85,6 +88,7 @@
                     </div>
                 </div>
 
+                <div id="parours"></div>
                 <div class="intitule">
                     <div class="intitule__text" id="parcours">Parcours</div>
                 </div>
@@ -93,7 +97,6 @@
                     <div class="vertical-bar">
                         <ul class="points">
                             <li data-aos="fade-left"></li>
-
                         </ul>
                         <div class="info" data-aos="fade-left">
                             <li class="info-item" data-aos="fade-left">Collège Robert Schuman (Obtention Brevet)</li>
@@ -105,10 +108,10 @@
                                data-aos-anchor-placement="top-bottom">v</p>
                         </div>
                     </div>
-
                 </div>
 
-                <div class="intitule">
+                <div id="comp"></div>
+                <div class="intitule competences" >
                     <div class="intitule__text" id="competences">Compétences</div>
                 </div>
 
@@ -163,11 +166,12 @@
                     </div>
                 </div>
 
+                <div id="exp"></div>
                 <div class="intitule" id>
                     <div class="intitule__text" id="experience">Expérience</div>
                 </div>
 
-                <div class="card" data-aos="fade-right">
+                <div class="card" data-aos="fade-left">
                     <h1>Sorbonne Université - Institut des Sciences de la Terre de Paris</h1>
                     <div class="content">
                         <p>
@@ -182,9 +186,9 @@
                             - Thèmes enfants WordPress
                         </p>
                     </div>
-
                 </div>
-                <div class="card" data-aos="fade-left">
+
+                <div class="card" data-aos="fade-right">
                     <h1>Happy Cash</h1>
                     <div class="content">
                         <p>
@@ -221,7 +225,7 @@
                 </div>
             </footer>
 
-            <div id="scrollButtonContainer" onclick="window.location.href='#header'">
+            <div id="scrollButtonContainer" onclick="window.location.href='#up_there'">
                 <button id="scrollButton">↑</button>
             </div>
 
