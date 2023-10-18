@@ -1,241 +1,164 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-    <title>Axphyr's page</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="public/css/style.css" />
-    <link rel="icon" type="image/png" href="public/img/coincoin.jpg">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap" rel="stylesheet">
-</head>
-        <body>
-        <div id="up_there"></div>
-
-        <nav class="navbar">
-                <div class="propos" onclick="redirectToSection('a__propos')">À propos</div>
-                <div class="parcours" onclick="redirectToSection('parours')">Parcours</div>
-                <div class="competences" onclick="redirectToSection('comp')">Compétences</div>
-                <div class="experience" onclick="redirectToSection('exp')">Expérience</div>
-            </nav>
-            <header class="header" id="header">
-                <div class="header-overlay">
-                    <h1 class="header-text">Arbër Jonuzi</h1>
-                    <h1 class="header-text">Développeur Web Full Stack</h1>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Arbër Jonuzi</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#page-top">Arbër Jonuzi</a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="#about">A propos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#experience">Expériences</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#signup">Réseaux</a></li>
+                    </ul>
                 </div>
-                <div id="particles-js"></div>
-                <div class="content text-md-center"></div>
-            </header>
-
-            <main>
-                <div id="a__propos"></div>
-                <div class="intitule">
-                    <div class="intitule__text" id="a_propos">à propos</div>
-                </div>
-
-                <div class="card" data-aos="fade-left">
-                    <h1>Moi</h1>
-                    <div class="content">
-                        <p>
-                            Je suis un passionnée d'informatique et de
-                            création de site internet en 3ème année à
-                            l'Université de Reims Champagne-Ardenne dans
-                            l'Institut Universitaire de Technologie dans le
-                            département informatique et je suis à la
-                            recherche d'une alternance pour clôturer ma 3ème
-                            année. <br>
-                            Je recherche une alternance dans le développpement
-                            Web en Ile-de-France à partir de début septembre. <br>
-                            Vous avez dans la suite de ce portfolio les  informations
-                            complémentaires sur qui je suis et sur mes compétences. <br>
-                            J'espère que celui-ci pourra vous montrer un peu plus
-                            mes compétences dans ce domaine.
-                        </p>
+            </div>
+        </nav>
+        <!-- Masthead-->
+        <header class="masthead">
+            <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+                <div class="d-flex justify-content-center">
+                    <div class="text-center">
+                        <h1 class="mx-auto my-0 text-uppercase">Portfolio</h1>
+                        <h2 class="text-white-50 mx-auto mt-2 mb-5">Développeur Web Full Stack</h2>
+                        <a class="btn btn-primary" href="#about">Se lancer</a>
                     </div>
-
                 </div>
-                <div class="card" data-aos="fade-right">
-                    <h1>Informatique</h1>
-                    <div class="content">
-                        <p>L'informatique occupe une grande place en moi
-                        depuis ma jeunesse. <br>
-                        Je suis un fan de tout ce qui touche l'informatique
-                        et le web en général. J'aime créer des petits programmes
-                        dans mon temps libre pour m'amuser ou en parler avec
-                        mes amis qui partagent cette passion. <br>
-                        C'est une des raisons pour lesquelles j'ai fais mon
-                        stage de 3ème dans une entreprise de réparation d'outils
-                        informatiques ainsi que mon stage de 2ème année (de 3 mois)
-                        dans les locaux de l'ISTeP.  <br>
-                        J'aimerais continuer cette passion dans ma 3ème année
-                        avec une alternance dans le développement Web
-                        en tant que développeur Web Full Stack.
+            </div>
+        </header>
+        <!-- About-->
+        <section class="about-section text-center" id="about">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-lg-8">
+                        <h2 class="text-white mb-4">A propos de moi</h2>
+                        <p class="text-white-50">
+                            Je suis ravi de partager avec vous ma trajectoire académique et professionnelle actuelle. En ce moment, je suis plongé dans ma troisième année d'études en informatique à l'IUT de Reims, une période de ma vie où je me suis totalement investi dans l'apprentissage et la maîtrise des aspects techniques de ce domaine en constante évolution. Mais ce n'est pas tout : en parallèle de mes études, je m'épanouis en tant que développeur Web Full Stack en alternance chez <a class="cash_flow_a" href="https://www.cashflowpositif.com/" target="_blank">Cash Flow Positif</a>. <br> <br>
+
+                            Ce double engagement a été pour moi une occasion exceptionnelle d'appliquer les connaissances acquises en cours dans un environnement professionnel concret. J'ai eu l'opportunité de travailler sur des projets réels, de résoudre des problèmes complexes et de collaborer avec des experts de l'industrie. Cette expérience a non seulement renforcé mes compétences techniques, mais m'a également permis de comprendre comment les concepts abstraits étudiés en classe prennent vie dans le monde professionnel. <br> <br>
+
+                            Je suis enchanté de pouvoir vous présenter non seulement les projets informatiques que j'ai créés en mariant ces deux mondes, mais aussi de vous partager le parcours qui m'a conduit à cette intersection passionnante entre l'art et la technologie.
                         </p>
                     </div>
                 </div>
-                <div class="card" data-aos="fade-left">
-                    <h1>Art</h1>
-                    <div class="content">
-                        <p>Passionné par l'art, j'aime l'acte créatif en lui-même. De cela découle une
-                            passion pour l'informatique qui allie art et création. Dès que possible, je dessine
-                            ou crée des œuvres avec tout type de matériaux. <br>
-                            Je passe une partie de mon temps libre dans l'étude de fonctions ou d'objets
-                            informatiques afin de satisfaire cette curiosité. <br>
-                            Je porte un grand intérêt pour la littérature, particulièrement anglo-saxonne.
-                            Autodidacte dans le piano, j'ai appris certaines pièces qui ont permis de
-                            développer ma concentration.</p>
-                    </div>
-                </div>
+            </div>
+        </section>
 
-                <div id="parours"></div>
-                <div class="intitule">
-                    <div class="intitule__text" id="parcours">Parcours</div>
-                </div>
-
-                <div data-aos="fade-right">
-                    <div class="vertical-bar">
-                        <ul class="points">
-                            <li data-aos="fade-left"></li>
-                        </ul>
-                        <div class="info" data-aos="fade-left">
-                            <li class="info-item" data-aos="fade-left">Collège Robert Schuman (Obtention Brevet)</li>
-                            <ul></ul>
-                            <li class="info-item" data-aos="fade-left">Lycée Clémenceau (Obtention Baccalauréat)</li>
-                            <ul></ul>
-                            <li class="info-item" data-aos="fade-left">Institut Universitaire de Technologie URCA (3ème année)</li>
-                            <p data-aos="fade-up"
-                               data-aos-anchor-placement="top-bottom">v</p>
+        <!-- Projects-->
+        <section class="projects-section bg-light" id="experience">
+            <div class="container px-4 px-lg-5">
+                <!-- Featured Project Row-->
+                <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
+                    <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/cfp_bannière_cropped.jpg" alt="..." /></div>
+                    <div class="col-xl-4 col-lg-5">
+                        <div class="featured-text text-center text-lg-left">
+                            <h4>Cash Flow Positif</h4>
+                            <p class="text-black-50 mb-0">Alternant pour l'année scolaire 2023-2024 chez Cash Flow Positif en tant que Développeur Web Full Stack. Missions principalement dans le développement des sites internet des filiales de l'entreprise ainsi que Lead Developper pour un projet d'automatisation des process de la boîte qui est une fintech dans l'investissement locatif à l'aide d'intelligences artificielles.</p>
                         </div>
                     </div>
                 </div>
-
-                <div id="comp"></div>
-                <div class="intitule competences" >
-                    <div class="intitule__text" id="competences">Compétences</div>
-                </div>
-
-                <div class="card" data-aos="fade-left">
-                    <h1>Back-end</h1>
-                    <div class="content">
-                        <p>
-                            - Utilisation des technologies PHP avec Symfony. <br>
-                            - Utilisation des technologies C# avec .NET Core et .NET Framework. <br>
-                            - Réalisation de projets en PHP avec les bibliothèques MyPDO & PDO, ainsi qu'en PHP natif. <br>
-                            - Expérience dans la mise en place de tests unitaires et de tests d'intégration avec Codeception & PHPUnit. <br>
-                            - Utilisation d'API en PHP avec API Platforme. <br>
-                            - Utilisation de bases de données MySQL, Oracle & NoSQL, ainsi qu'un peu de MongoDB.
-                        </p>
+                <!-- Project One Row-->
+                <div class="row gx-0 mb-5 mb-lg-0 justify-content-center">
+                    <div class="col-lg-6"><img class="img-fluid" src="assets/img/logo_istep.png" alt="..." /></div>
+                    <div class="col-lg-6">
+                        <div class="bg-black text-center h-100 project">
+                            <div class="d-flex h-100">
+                                <div class="project-text w-100 my-auto text-center text-lg-left">
+                                    <h4 class="text-white">Institut des Sciences de la Terre de Paris (ISTeP) - Sorbonne Université</h4>
+                                    <p class="mb-0 text-white-50">Stagiaire pendant 3 mois dans l'institut des sciences de la Terre de la Sorbonne pour la refonte totale de leur site intranet ainsi que pour la création d'un outil de regroupement de données des chercheurs et enseignants-chercheurs pour aider l'institut à regrouper ses données HCERES.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="card" data-aos="fade-right">
-                    <h1>Front-end</h1>
-                    <div class="content">
-                        <p>
-                            - Utilisation d'HTML pour le squelette de la page, bien que la majorité soit gérée en back-end. <br>
-                            - Utilisation de la technologie CSS pour le style des pages, ainsi que les modules Flexbox pour un rendu responsive. <br>
-                            - Utilisation de JavaScript pour ajouter du style, des animations et améliorer l'interactivité du site. <br>
-                            - Utilisation de React pour le développement front-end, avec l'utilisation de composants réutilisables. <br>
-                            - Utilisation d'Ajax pour des requêtes asynchrones et dynamiques.
-                        </p>
+                <!-- Project Two Row-->
+                <div class="row gx-0 justify-content-center">
+                    <div class="col-lg-6"><img class="img-fluid" src="assets/img/konexio_logo.jpeg" alt="..." /></div>
+                    <div class="col-lg-6 order-lg-first">
+                        <div class="bg-black text-center h-100 project">
+                            <div class="d-flex h-100">
+                                <div class="project-text w-100 my-auto text-center text-lg-right">
+                                    <h4 class="text-white">Konexio</h4>
+                                    <p class="mb-0 text-white-50">Enseignant bénévole pour les réfugiés et migrants dans l'association Konexio. Enseignements axés sur les bases des langages du Web : HTML, CSS et JavaScript.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="card" data-aos="fade-left">
-                    <h1>Programmation Système & DevOps</h1>
-                    <div class="content">
-                        <p>
-                            - Utilisation de PHP pour la gestion de fichiers. <br>
-                            - Utilisation de C# pour créer un petit programme similaire à Git. <br>
-                            - Création de jeux en ligne de commande avec des interfaces en utilisant C#. <br>
-                            - Expérience de programmation système sous Linux et Windows. <br>
-                            - Mise en place de serveurs web en utilisant Apache et WordPress. <br>
-                            - Utilisation de Docker pour la gestion des conteneurs et la mise en place d'environnements de développement.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="card" data-aos="fade-right">
-                    <h1>Algorithmes</h1>
-                    <div class="content">
-                        <p>
-                            - Utilisation intensive de Python dans le domaine des mathématiques, en implémentant des algorithmes de probabilités, de manipulation de matrices, d'arbres pondérés, etc. <br>
-                            - Réalisation de projets en Python, notamment la création et la résolution de labyrinthes. <br>
-                            - Utilisation de PHP avec une approche orientée objet pour implémenter des algorithmes. <br>
-                            - Utilisation de C# pour la gestion d'automates, la création de petits jeux et la résolution de problèmes algorithmiques.
-                        </p>
-                    </div>
-                </div>
-
-                <div id="exp"></div>
-                <div class="intitule" id>
-                    <div class="intitule__text" id="experience">Expérience</div>
-                </div>
-
-                <div class="card" data-aos="fade-left">
-                    <h1>Sorbonne Université - Institut des Sciences de la Terre de Paris</h1>
-                    <div class="content">
-                        <p>
-                            - Recueil de besoins <br>
-                            - Travail d'équipe <br>
-                            - Dévéloppement back-end (PHP) <br>
-                            - Autonomie <br>
-                            - Dévelopement front-end (CSS, JS) <br>
-                            - Déploiement site (Apache) <br>
-                            - WordPress <br>
-                            - Plugins WordPress <br>
-                            - Thèmes enfants WordPress
-                        </p>
-                    </div>
-                </div>
-
-                <div class="card" data-aos="fade-right">
-                    <h1>Happy Cash</h1>
-                    <div class="content">
-                        <p>
-                            - Autonomie <br>
-                            - Réparation outils informatique <br>
-                            - Conseil clientèle <br>
-                            - Organisation <br>
-                            - Travail d'équipe
-                        </p>
-                    </div>
-                </div>
-            </main>
-
-
-            <footer>
-                <p>Réseaux Sociaux</p>
-
-                <div class="networks">
-                    <a href="https://github.com/Axphyr" target="_blank"
-                       data-aos="fade-right"
-                       data-aos-delay="100">
-                        <img src="public/img/github.png" alt="github">
-                    </a>
-                    <a href="https://www.instagram.com/arrjnz/" target="_blank"
-                       data-aos="fade-right"
-                       data-aos-delay="200">
-                        <img src="public/img/instagram.png" alt="instagram">
-                    </a>
-                    <a href="https://twitter.com/axphyr" target="_blank"
-                       data-aos="fade-right"
-                       data-aos-delay="300">
-                        <img src="public/img/twitter.png" alt="twitter">
-                    </a>
-                </div>
-            </footer>
-
-            <div id="scrollButtonContainer" onclick="window.location.href='#up_there'">
-                <button id="scrollButton">↑</button>
             </div>
+        </section>
+        <!-- Signup-->
+        <section class="signup-section" id="signup">
 
-            <script src="public/js/jquery-3.1.1.min.js"></script>
-            <script src="public/js/particles.min.js"></script>
-            <script src="public/js/app.js"></script>
-            <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-            <script src="public/js/script.js"></script>
-            <script>
-                AOS.init();
-            </script>
-        </body>
+        </section>
+        <!-- Contact-->
+        <section class="contact-section bg-black">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-map-marked-alt text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Adresse</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50">Boulevard Pommery, Reims, France</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-envelope text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Email</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50"><a href="mailto:arber.jonuzi12345@gmail.com">arber.jonuzi12345@gmail.com</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-mobile-alt text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Téléphone</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50">06 05 63 06 73</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="social d-flex justify-content-center">
+                    <a class="mx-2" href="#!"><i class="fab fa-twitter"></i></a>
+                    <a class="mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
+                    <a class="mx-2" href="#!"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </section>
+        <!-- Footer-->
+        <footer class="footer bg-black small text-center text-white-50"><div class="container px-4 px-lg-5">Copyright &copy; Arbër Jonuzi E-portfolio 2023</div></footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <!-- * *                               SB Forms JS                               * *-->
+        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+    </body>
 </html>
