@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="701c9726-4bc4-4fe7-a63d-18ad5886917b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/Tests/experience-psycho.html" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Tests/experience-psycho.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/Tests/experience-psycho2.html" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Tests/experience-psycho2.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/Tests/experience-psycho3.html" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Tests/experience-psycho3.html" afterDir="false" />
@@ -77,7 +76,7 @@
       <workItem from="1698253541862" duration="9067000" />
       <workItem from="1698307365282" duration="706000" />
       <workItem from="1698337851214" duration="2320000" />
-      <workItem from="1698425623496" duration="9530000" />
+      <workItem from="1698425623496" duration="9849000" />
     </task>
     <task id="LOCAL-00001" summary="Portfolio V2">
       <created>1697654329496</created>
@@ -107,7 +106,14 @@
       <option name="project" value="LOCAL" />
       <updated>1698441159064</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Portfolio V2  : changements liens">
+      <created>1698441859517</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1698441859517</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -130,6 +136,7 @@
     <MESSAGE value="Portfolio V2  : psycho test" />
     <MESSAGE value="Portfolio V2  : Correction bug" />
     <MESSAGE value="Portfolio V2  : changements" />
-    <option name="LAST_COMMIT_MESSAGE" value="Portfolio V2  : changements" />
+    <MESSAGE value="Portfolio V2  : changements liens" />
+    <option name="LAST_COMMIT_MESSAGE" value="Portfolio V2  : changements liens" />
   </component>
 </project>

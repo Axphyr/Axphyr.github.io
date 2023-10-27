@@ -179,6 +179,8 @@
     const nameInput = document.getElementById("name");
     const lastNameInput = document.getElementById("lastName");
     let hasReloadedIncremented = false;
+    audio.pause();
+
 
     // Check if the 'reloadCount' key exists in localStorage
     if (localStorage.getItem('reloadCount') && !isAdmin) {
