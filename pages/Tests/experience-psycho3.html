@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Exp.</title>
+    <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.18.0/js/md5.min.js"></script>
+    <style>
+        * {
+            font-size: 84px;
+            font-family: "Calibri", sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e8e8e8;
+        }
+        #game-container {
+            display: none;
+            text-align: center;
+            font-family: "Calibri", sans-serif;
+        }
+        .lancer {
+            background-color: #3498db;
+            color: #ffffff;
+            display: none;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: "Calibri", sans-serif;
+            font-size: 42px;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .lancer:hover {
+            background-color: #2980b9;
+        }
+        audio {
+            display: none;
+        }
+        .lancer-checkbox-label {
+            font-size: 20px;
+        }
+        audio {
+            display: none;
+        }
+        .top-right {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .account-icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .login-form {
+            display: none;
+            flex-direction: column;
+            top: 20px;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-form label{
+            font-size: 16px;
+        }
+
+        .login-form input[type="text"], .login-form input[type="password"] {
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .login__button{
+            font-size: 16px;
+        }
+        .notification {
+            font-size: 16px;
+            color: darkred;
+            position: fixed;
+            top: 100px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-right">
+    <div style="display: flex; justify-content: right;">
+        <div class="account-icon" onclick="toggleLoginForm()">👤</div>
+    </div>
+    <div class="login-form" id="loginForm">
+        <label for="username">Utilisateur</label>
+        <input type="text" id="username" placeholder="Username">
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()" class="login__button">Login</button>
+    </div>
+</div>
+
+<button class="lancer">Commencer</button>
+<p id="alert" style="font-size: 18px; margin-top: 40px;">
+    <strong style="font-size: 24px; text-decoration: underline; color: red;">Consignes : </strong> <br> <br>
+
+    <strong style="font-size: 18px">Environnement calme</strong> : Assurez-vous d'être dans un lieu exempt de distractions. <br> <br>
+
+    <strong style="font-size: 18px">Casque audio</strong> : Utilisez un casque audio de qualité pour une expérience sonore optimale. <br> <br>
+
+    <strong style="font-size: 18px">Concentration exclusive</strong> : N'effectuez pas de prises de notes ni d'utilisation d'aides extérieures. <br> <br>
+
+    <strong style="font-size: 18px">Navigation web</strong> : Ne quittez pas la page de l'expérience sous peine d'annulation de participation. <br> <br>
+
+    <strong style="font-size: 18px">Durée</strong> : Prévoyez suffisamment de temps pour compléter l'expérience sans interruptions. <br> <br>
+
+    <strong style="font-size: 18px">Honnêteté</strong> : Soyez honnête dans vos réponses et actions, sans chercher à tromper les résultats.
+</p>
+<label for="name" class="name" style="font-size: 18px;">Nom</label>
+<input type="text" id="name" class="lancer-input" style="font-size: 18px;">
+
+<label for="lastName" class="lastName" style="font-size: 18px;">Prénom</label>
+<input type="text" id="lastName" class="lancer-input" style="font-size: 18px;">
+
+<input type="checkbox" id="showButton">
+<label class="lancer-checkbox-label" for="showButton">Je confirme avoir pris en compte les consignes.</label>
+<div id="game-container"></div>
+<audio id="audio" controls autoplay src="../../assets/audio/fireplace.mp3"></audio>
+
+<script>
+
+    let isAdmin = false;
+
+    function toggleLoginForm() {
+        const loginForm = document.getElementById("loginForm");
+        loginForm.style.display = (loginForm.style.display === "flex") ? "none" : "flex";
+    }
+
+    function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        isAdmin = true;
+
+        if (username === "admin" && md5(password) === "2e7b5284388721273c9bb65d72d9335a") {
+            console.log("logged in successfully")
+            document.querySelector(".top-right").style.display = "none";
+            const notification = document.createElement("div");
+            notification.classList.add("notification");
+            notification.textContent = "Logged in successfully";
+            document.body.insertBefore(notification, document.body.firstChild);
+
+            // Display the notification for 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        } else {
+            console.log("Failed to log in.")
+        }
+    }
+
+    const initialWords = ["CHAPEAU", "MIEL", "GROTTE", "SOURIS", "CARAVANE","VASE", "COUVERTURE", "PIEUVRE", "MUSELIERE", "OSSELET", "SUMO", "CASCADE", "INFIRMIERE", "DROGUE", "ABATTOIR","KERMESSE", "TELEVISEUR", "ESCABEAU", "PISSENLIT", "AVALANCHE", "RAYON", "KOALA", "MAISON", "TIRELIRE", "BOUSSOLE", "FLUTE", "SAUTERELLE", "ENVELOPPE", "VAISSELLE", "MACARON"];
+    const gameContainer = document.getElementById("game-container");
+    const lancerButton = document.querySelector(".lancer");
+    const showButtonCheckbox = document.getElementById("showButton");
+    const audio = document.getElementById("audio");
+    const alert = document.getElementById("alert");
+    const checkBoxLabel = document.querySelector(".lancer-checkbox-label");
+    const nameInput = document.getElementById("name");
+    const lastNameInput = document.getElementById("lastName");
+    let hasReloadedIncremented = false;
+
+    // Check if the 'reloadCount' key exists in localStorage
+    if (localStorage.getItem('reloadCount') && !isAdmin) {
+        // Hides the box if visited multiple times
+        showButtonCheckbox.style.display = "none";
+    }
+
+    showButtonCheckbox.addEventListener("change", function () {
+        lancerButton.style.display = "block";
+        showButtonCheckbox.style.display = "none";
+        alert.style.display = "none"
+        checkBoxLabel.style.display = "none";
+        nameInput.style.display = "none";
+        lastNameInput.style.display = "none";
+        document.querySelector(".name").style.display = "none";
+        document.querySelector(".lastName").style.display = "none";
+        document.querySelector(".top-right").style.display = "none";
+    });
+
+    lancerButton.addEventListener("click", startGame);
+    document.querySelector(".login__button").addEventListener('click', toggleCheckbox);
+
+    // Add input event listeners to check for input in the name and last name fields
+    nameInput.addEventListener("input", toggleCheckbox);
+    lastNameInput.addEventListener("input", toggleCheckbox);
+
+    toggleCheckbox()
+
+    function toggleCheckbox() {
+        // Enable the checkbox if both name and last name fields are not empty
+        if(nameInput.value === "" || lastNameInput.value === ""){
+            showButtonCheckbox.style.display = "none";
+            checkBoxLabel.style.display = "none";
+        } else {
+            if(!localStorage.getItem('reloadCount') || isAdmin){
+                showButtonCheckbox.style.display = "block";
+                checkBoxLabel.style.display = "block";
+            }
+        }
+    }
+
+    let count = 0;
+
+    let screenType = "";
+
+    function startGame() {
+        // Check if the browser supports the Fullscreen API
+        if (document.documentElement.requestFullscreen) {
+            // Most browsers
+            screenType = "most";
+            document.documentElement.requestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+            // Firefox
+            screenType = "fire";
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+            // Chrome, Safari, and Opera
+            screenType = "cso";
+            document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) {
+            // IE/Edge
+            screenType = "edge";
+            document.documentElement.msRequestFullscreen();
+        }
+
+        lancerButton.style.display = "none";
+        showButtonCheckbox.style.display = "none";
+        gameContainer.style.display = "block";
+        alert.style.display = "none";
+
+        let currentRound = 0;
+        let usedWords = [];
+        let leftFullScreen = false;
+
+        const fullscreenChangeHandler = () => {
+            if (screenType === "most" && !document.fullscreenElement) {
+                // If the user exits full screen, stop the game
+                leftFullScreen = true;
+            }
+        }
+
+        function getRandomWord() {
+            if (usedWords.length === initialWords.length) {
+                usedWords = [];
+            }
+            let randomWord;
+            do {
+                randomWord = initialWords[Math.floor(Math.random() * initialWords.length)];
+            } while (usedWords.includes(randomWord));
+            usedWords.push(randomWord);
+            return randomWord;
+        }
+
+        // Secondes parametrage (en ms)
+        const secondesAuDebut = 15000;
+        const secondesFin = 15000;
+        const secondesParX = 2000;
+        const secondesParMots = 3000;
+
+
+        // Add an event listener to listen for fullscreen change
+        document.addEventListener("fullscreenchange", fullscreenChangeHandler);
+
+        if(!leftFullScreen){
+            setTimeout(function () {
+                function playRound() {
+                    if(leftFullScreen){
+                        gameContainer.style.display = "none";
+                        audio.pause();
+                        alert.innerHTML = "Annulation de la prise en compte de l'expérience.";
+                        alert.style.display = "block";
+
+                        if(count !== 0 && !hasReloadedIncremented){
+                            // Check if the 'reloadCount' key exists in localStorage
+                            if (localStorage.getItem('reloadCount')) {
+                                // Retrieve the current count from localStorage
+                                let counter = parseInt(localStorage.getItem('reloadCount'));
+                                // Increment the count
+                                counter++;
+                                // Store the updated count back in localStorage
+                                localStorage.setItem('reloadCount', counter.toString());
+                            } else {
+                                // If the 'reloadCount' key doesn't exist, initialize it to 1
+                                localStorage.setItem('reloadCount', "1");
+                            }
+                            return;
+                        }
+                    }
+                    count += 1;
+                    if (currentRound >= 29) {
+                        gameContainer.style.display = "none";
+                        count = 0;
+                        setTimeout(() => {
+                            audio.play();
+                            setTimeout(() => {
+                                if(!leftFullScreen){
+                                    window.location = 'https://docs.google.com/forms/d/e/1FAIpQLScwlqZrIO8NXAwB3r7QNxeCywjE-VqlEj4Ds5zvNxA-3AS3qQ/viewform?usp=pp_url&entry.1346879672=' + nameInput.value + '&entry.1149341625=' + lastNameInput.value;
+                                }
+                            }, 30 * secondesParX + 30 * secondesParMots + secondesFin + secondesAuDebut);
+                        }, secondesFin);
+                        return;
+                    }
+
+                    setTimeout(() => {
+                        gameContainer.innerHTML = "X";
+                    }, secondesParX);
+
+                    setTimeout(() => {
+                        gameContainer.innerHTML = getRandomWord();
+                        currentRound++;
+                        if(!leftFullScreen){
+                            setTimeout(playRound, secondesParMots - 2000);
+                        }
+                    }, 4000);
+                }
+
+                playRound();
+            }, secondesAuDebut);
+        } else {
+            window.location.reload();
+        }
+    }
+
+</script>
+</body>
+</html>
