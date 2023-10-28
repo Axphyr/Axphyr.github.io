@@ -231,6 +231,13 @@
     let screenType = "";
 
     function startGame() {
+
+        const audio2 = new Audio();
+        audio2.src = "../../assets/audio/fireplace.mp3";
+        audio2.style.display = 'none';
+        audio2.load();
+        audio2.play();
+        audio2.pause();
         // Check if the browser supports the Fullscreen API
         if (document.documentElement.requestFullscreen) {
             // Most browsers
@@ -348,7 +355,7 @@
                     gameContainer.style.display = "none";
                     count = 0;
                     setTimeout(() => {
-                        audio.play();
+                        audio2.play();
 
                         if(leftFullScreen){
                             gameContainer.style.display = "none";
