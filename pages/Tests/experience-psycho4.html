@@ -126,16 +126,11 @@
 
     <strong style="font-size: 18px">Honnêteté</strong> : Soyez honnête dans vos réponses et actions, sans chercher à tromper les résultats.
 </p>
-<label for="name" class="name" style="font-size: 18px;">Nom</label>
-<input type="text" id="name" class="lancer-input" style="font-size: 18px;">
-
-<label for="lastName" class="lastName" style="font-size: 18px;">Prénom</label>
-<input type="text" id="lastName" class="lancer-input" style="font-size: 18px;">
 
 <input type="checkbox" id="showButton">
 <label class="lancer-checkbox-label" for="showButton">Je confirme avoir pris en compte les consignes.</label>
 <div id="game-container"></div>
-<audio id="audio" controls autoplay src="../../assets/audio/Hopelessly_Devoted_To_You_-_Grease_VERSION_FRANCAISE__Sarah_Schwab_Cover_frenchversion.mp3"></audio>
+<audio id="audio" controls autoplay src="../../assets/audio/fireplace.mp3"></audio>
 
 <script>
 
@@ -145,6 +140,13 @@
         const loginForm = document.getElementById("loginForm");
         loginForm.style.display = (loginForm.style.display === "flex") ? "none" : "flex";
     }
+
+    document.getElementById("password").addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            login();
+            toggleCheckbox();
+        }
+    });
 
     function login() {
         const username = document.getElementById("username").value;
@@ -176,18 +178,17 @@
     const audio = document.getElementById("audio");
     const alert = document.getElementById("alert");
     const checkBoxLabel = document.querySelector(".lancer-checkbox-label");
-    const nameInput = document.getElementById("name");
-    const lastNameInput = document.getElementById("lastName");
     let hasReloadedIncremented = false;
+    audio.controls = false;
     audio.pause();
     audio.currentTime = 0
     audio.pause();
-
 
     // Check if the 'reloadCount' key exists in localStorage
     if (localStorage.getItem('reloadCount') && !isAdmin) {
         // Hides the box if visited multiple times
         showButtonCheckbox.style.display = "none";
+        checkBoxLabel.style.display = "none";
     }
 
     showButtonCheckbox.addEventListener("change", function () {
@@ -195,33 +196,28 @@
         showButtonCheckbox.style.display = "none";
         alert.style.display = "none"
         checkBoxLabel.style.display = "none";
-        nameInput.style.display = "none";
-        lastNameInput.style.display = "none";
-        document.querySelector(".name").style.display = "none";
-        document.querySelector(".lastName").style.display = "none";
         document.querySelector(".top-right").style.display = "none";
     });
 
-    lancerButton.addEventListener("click", startGame);
     document.querySelector(".login__button").addEventListener('click', toggleCheckbox);
 
-    // Add input event listeners to check for input in the name and last name fields
-    nameInput.addEventListener("input", toggleCheckbox);
-    lastNameInput.addEventListener("input", toggleCheckbox);
-
-    toggleCheckbox()
-
     function toggleCheckbox() {
-        // Enable the checkbox if both name and last name fields are not empty
-        if(nameInput.value === "" || lastNameInput.value === ""){
+        if(!isAdmin){
             showButtonCheckbox.style.display = "none";
             checkBoxLabel.style.display = "none";
         } else {
-            if(!localStorage.getItem('reloadCount') || isAdmin){
-                showButtonCheckbox.style.display = "block";
-                checkBoxLabel.style.display = "block";
-            }
+            showButtonCheckbox.style.display = "block";
+            checkBoxLabel.style.display = "block";
         }
+    }
+
+
+    lancerButton.addEventListener("click", startGame);
+    console.log(localStorage.getItem('reloadCount'))
+
+    if(!localStorage.getItem('reloadCount') || isAdmin){
+        showButtonCheckbox.style.display = "block";
+        checkBoxLabel.style.display = "block";
     }
 
     let count = 0;
@@ -316,6 +312,7 @@
                         gameContainer.style.display = "none";
                         count = 0;
                         setTimeout(() => {
+                            console.log("plays song");
                             audio.play();
 
                             if(leftFullScreen){
@@ -338,7 +335,7 @@
                             }
                             setTimeout(() => {
                                 if(!leftFullScreen){
-                                    window.location = 'https://docs.google.com/forms/d/e/1FAIpQLSc6NZqhdPoxE9hm_uVYTlKuQp-DdWxXfdvg_X5sIenZj6V6PQ/viewform?usp=pp_url&entry.929730950=' + nameInput.value + '&entry.2133570103=' + lastNameInput.value;
+                                    window.location = 'https://docs.google.com/forms/d/e/1FAIpQLSc6NZqhdPoxE9hm_uVYTlKuQp-DdWxXfdvg_X5sIenZj6V6PQ/viewform?usp=pp_url&entry.1046486360=FR';
                                 } else {
                                     gameContainer.style.display = "none";
                                     audio.pause();
@@ -375,7 +372,7 @@
                 }
 
                 playRound();
-            }, secondesAuDebut);
+            }, secondesAuDebut - 2000);
         } else {
             window.location.reload();
         }
