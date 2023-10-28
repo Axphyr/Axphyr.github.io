@@ -130,8 +130,7 @@
 <input type="checkbox" id="showButton">
 <label class="lancer-checkbox-label" for="showButton">Je confirme avoir pris en compte les consignes.</label>
 <div id="game-container"></div>
-<audio id="audio" controls autoplay src="../../assets/audio/fireplace.mp3"></audio>
-<input type="hidden" id="audioControl" value="0">
+<audio id="audio" controls autoplay src="../../assets/audio/fireplace.mp3" playsinline=""></audio>
 
 <script>
 
@@ -148,18 +147,6 @@
             toggleCheckbox();
         }
     });
-
-    document.getElementById("audioControl").addEventListener("change", playAudioIfRequired);
-
-    function playAudioIfRequired() {
-        console.log("audio function toggled");
-        const audio = document.getElementById("audio");
-        const audioControl = document.getElementById("audioControl");
-        if (audioControl.value === "1") {
-            // Play audio
-            audio.play();
-        }
-    }
 
     function login() {
         const username = document.getElementById("username").value;
@@ -196,7 +183,6 @@
     const alert = document.getElementById("alert");
     const checkBoxLabel = document.querySelector(".lancer-checkbox-label");
     let hasReloadedIncremented = false;
-    const audioControls = document.getElementById("audioControl");
     audio.controls = false;
     audio.pause();
     audio.currentTime = 0
@@ -330,12 +316,7 @@
                         count = 0;
                         setTimeout(() => {
                             console.log("plays song");
-                            const audioControl = document.getElementById("audioControl");
-                            audioControl.value = "1";
-                            console.log("Audio control value : ", audioControl.value)
-                            const changeEvent = new Event("change", { bubbles: true });
-
-                            audioControl.dispatchEvent(changeEvent);
+                            audio.play();
 
                             if(leftFullScreen){
                                 gameContainer.style.display = "none";

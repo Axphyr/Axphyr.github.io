@@ -130,12 +130,15 @@
 <input type="checkbox" id="showButton">
 <label class="lancer-checkbox-label" for="showButton">Je confirme avoir pris en compte les consignes.</label>
 <div id="game-container"></div>
-<audio id="audio" controls autoplay src="../../assets/audio/fireplace.mp3"></audio>
-<input type="hidden" id="audioControl" value="0">
+<audio id="audio" controls autoplay src="../../assets/audio/fireplace.mp3" playsinline=""></audio>
 
 <script>
 
     let isAdmin = false;
+
+    if(isAdmin){
+        toggleCheckbox();
+    }
 
     function toggleLoginForm() {
         const loginForm = document.getElementById("loginForm");
@@ -149,27 +152,11 @@
         }
     });
 
-    document.getElementById("audioControl").addEventListener("change", playAudioIfRequired);
-
-    function playAudioIfRequired() {
-        console.log("audio function toggled");
-        const audio = document.getElementById("audio");
-        const audioControl = document.getElementById("audioControl");
-        if (audioControl.value === "1") {
-            // Play audio
-            audio.play();
-        }
-    }
-
     function login() {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
 
         isAdmin = true;
-
-        if(isAdmin){
-            toggleCheckbox();
-        }
 
         if (username === "admin" && md5(password) === "2e7b5284388721273c9bb65d72d9335a") {
             console.log("logged in successfully")
@@ -328,17 +315,7 @@
                         gameContainer.style.display = "none";
                         count = 0;
                         setTimeout(() => {
-                            if (audio.paused) {
-                                audio.play()
-                                    .then(() => {
-                                        // Audio playback has started successfully
-                                        console.log("Audio started.");
-                                    })
-                                    .catch((error) => {
-                                        // Handle any errors or autoplay restrictions
-                                        console.error("Failed to start audio: " + error);
-                                    });
-                            }
+                            audio.play();
 
                             if(leftFullScreen){
                                 gameContainer.style.display = "none";
@@ -359,15 +336,7 @@
                                 return;
                             }
                             setTimeout(() => {
-                                console.log("plays song");
-                                const audioControl = document.getElementById("audioControl");
-                                audioControl.value = "1";
-                                console.log("Audio control value : ", audioControl.value)
-                                const changeEvent = new Event("change", { bubbles: true });
-
-                                audioControl.dispatchEvent(changeEvent);
-
-                                if(leftFullScreen){
+                                if(!leftFullScreen){
                                     window.location = 'https://docs.google.com/forms/d/e/1FAIpQLSc6NZqhdPoxE9hm_uVYTlKuQp-DdWxXfdvg_X5sIenZj6V6PQ/viewform?usp=pp_url&entry.1046486360=AR';
                                 } else {
                                     gameContainer.style.display = "none";
