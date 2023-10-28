@@ -312,6 +312,66 @@
                         }
                     }
 
+                    if (currentRound >= 29) {
+                        gameContainer.style.display = "none";
+                        count = 0;
+                        setTimeout(() => {
+                            let hasClicked = false;
+
+                            const button = document.createElement('button');
+                            button.textContent = 'Continuer';
+
+                            button.addEventListener('click', function () {
+                                hasClicked = true;
+                            });
+
+                            document.body.appendChild(button);
+
+                            if(leftFullScreen){
+                                gameContainer.style.display = "none";
+                                audio.pause();
+                                alert.innerHTML = "Annulation de la prise en compte de l'expérience.";
+                                alert.style.display = "block";
+                                if (localStorage.getItem('reloadCount')) {
+                                    // Retrieve the current count from localStorage
+                                    let counter = parseInt(localStorage.getItem('reloadCount'));
+                                    // Increment the count
+                                    counter++;
+                                    // Store the updated count back in localStorage
+                                    localStorage.setItem('reloadCount', counter.toString());
+                                } else {
+                                    // If the 'reloadCount' key doesn't exist, initialize it to 1
+                                    localStorage.setItem('reloadCount', "1");
+                                }
+                                return;
+                            }
+                            if(hasClicked){
+                                setTimeout(() => {
+                                    if(!leftFullScreen){
+                                        window.location = 'https://docs.google.com/forms/d/e/1FAIpQLSc6NZqhdPoxE9hm_uVYTlKuQp-DdWxXfdvg_X5sIenZj6V6PQ/viewform?usp=pp_url&entry.1046486360=FR';
+                                    } else {
+                                        gameContainer.style.display = "none";
+                                        audio.pause();
+                                        alert.innerHTML = "Annulation de la prise en compte de l'expérience.";
+                                        alert.style.display = "block";
+                                        if (localStorage.getItem('reloadCount')) {
+                                            // Retrieve the current count from localStorage
+                                            let counter = parseInt(localStorage.getItem('reloadCount'));
+                                            // Increment the count
+                                            counter++;
+                                            // Store the updated count back in localStorage
+                                            localStorage.setItem('reloadCount', counter.toString());
+                                        } else {
+                                            // If the 'reloadCount' key doesn't exist, initialize it to 1
+                                            localStorage.setItem('reloadCount', "1");
+                                        }
+                                    }
+                                }, 30 * secondesParX + 30 * secondesParMots + secondesFin + secondesAuDebut);
+                            }
+                        }, secondesFin);
+                        return;
+                    }
+
                     setTimeout(() => {
                         gameContainer.innerHTML = "X";
                     }, secondesParX);
@@ -340,66 +400,6 @@
                             }
                         }
                     }, 4000);
-                }
-
-                if (currentRound >= 29) {
-                    gameContainer.style.display = "none";
-                    count = 0;
-                    setTimeout(() => {
-                        let hasClicked = false;
-
-                        const button = document.createElement('button');
-                        button.textContent = 'Continuer';
-
-                        button.addEventListener('click', function () {
-                            hasClicked = true;
-                        });
-
-                        document.body.appendChild(button);
-
-                        if(leftFullScreen){
-                            gameContainer.style.display = "none";
-                            audio.pause();
-                            alert.innerHTML = "Annulation de la prise en compte de l'expérience.";
-                            alert.style.display = "block";
-                            if (localStorage.getItem('reloadCount')) {
-                                // Retrieve the current count from localStorage
-                                let counter = parseInt(localStorage.getItem('reloadCount'));
-                                // Increment the count
-                                counter++;
-                                // Store the updated count back in localStorage
-                                localStorage.setItem('reloadCount', counter.toString());
-                            } else {
-                                // If the 'reloadCount' key doesn't exist, initialize it to 1
-                                localStorage.setItem('reloadCount', "1");
-                            }
-                            return;
-                        }
-                        if(hasClicked){
-                            setTimeout(() => {
-                                if(!leftFullScreen){
-                                    window.location = 'https://docs.google.com/forms/d/e/1FAIpQLSc6NZqhdPoxE9hm_uVYTlKuQp-DdWxXfdvg_X5sIenZj6V6PQ/viewform?usp=pp_url&entry.1046486360=AR';
-                                } else {
-                                    gameContainer.style.display = "none";
-                                    audio.pause();
-                                    alert.innerHTML = "Annulation de la prise en compte de l'expérience.";
-                                    alert.style.display = "block";
-                                    if (localStorage.getItem('reloadCount')) {
-                                        // Retrieve the current count from localStorage
-                                        let counter = parseInt(localStorage.getItem('reloadCount'));
-                                        // Increment the count
-                                        counter++;
-                                        // Store the updated count back in localStorage
-                                        localStorage.setItem('reloadCount', counter.toString());
-                                    } else {
-                                        // If the 'reloadCount' key doesn't exist, initialize it to 1
-                                        localStorage.setItem('reloadCount', "1");
-                                    }
-                                }
-                            }, 30 * secondesParX + 30 * secondesParMots + secondesFin + secondesAuDebut);
-                        }
-                    }, secondesFin);
-                    return;
                 }
 
                 playRound();
