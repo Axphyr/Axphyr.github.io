@@ -73,7 +73,7 @@
       <workItem from="1698337851214" duration="2320000" />
       <workItem from="1698425623496" duration="10462000" />
       <workItem from="1698485957827" duration="8881000" />
-      <workItem from="1698501994534" duration="6546000" />
+      <workItem from="1698501994534" duration="7339000" />
     </task>
     <task id="LOCAL-00001" summary="Portfolio V2">
       <created>1697654329496</created>
@@ -194,7 +194,14 @@
       <option name="project" value="LOCAL" />
       <updated>1698509602834</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Portfolio V2  : safari audio problems">
+      <created>1698510195825</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1698510195825</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -229,6 +236,7 @@
     <MESSAGE value="Portfolio V2  : apple behaviour yet again" />
     <MESSAGE value="Portfolio V2  : audioControl" />
     <MESSAGE value="Portfolio V2  : safari problems" />
-    <option name="LAST_COMMIT_MESSAGE" value="Portfolio V2  : safari problems" />
+    <MESSAGE value="Portfolio V2  : safari audio problems" />
+    <option name="LAST_COMMIT_MESSAGE" value="Portfolio V2  : safari audio problems" />
   </component>
 </project>
