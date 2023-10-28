@@ -135,7 +135,7 @@
 <input type="checkbox" id="showButton">
 <label class="lancer-checkbox-label" for="showButton">Je confirme avoir pris en compte les consignes.</label>
 <div id="game-container"></div>
-<audio id="audio" controls autoplay src="../../assets/audio/fireplace.mp3"></audio>
+<audio id="audio" controls autoplay src="../../assets/audio/Hopelessly_Devoted_To_You_-_Grease_VERSION_FRANCAISE__Sarah_Schwab_Cover_frenchversion.mp3"></audio>
 
 <script>
 
@@ -315,9 +315,44 @@
                         count = 0;
                         setTimeout(() => {
                             audio.play();
+
+                            if(leftFullScreen){
+                                gameContainer.style.display = "none";
+                                audio.pause();
+                                alert.innerHTML = "Annulation de la prise en compte de l'expérience.";
+                                alert.style.display = "block";
+                                if (localStorage.getItem('reloadCount')) {
+                                    // Retrieve the current count from localStorage
+                                    let counter = parseInt(localStorage.getItem('reloadCount'));
+                                    // Increment the count
+                                    counter++;
+                                    // Store the updated count back in localStorage
+                                    localStorage.setItem('reloadCount', counter.toString());
+                                } else {
+                                    // If the 'reloadCount' key doesn't exist, initialize it to 1
+                                    localStorage.setItem('reloadCount', "1");
+                                }
+                                return;
+                            }
                             setTimeout(() => {
                                 if(!leftFullScreen){
                                     window.location = 'https://docs.google.com/forms/d/e/1FAIpQLSc6NZqhdPoxE9hm_uVYTlKuQp-DdWxXfdvg_X5sIenZj6V6PQ/viewform?usp=pp_url&entry.929730950=' + nameInput.value + '&entry.2133570103=' + lastNameInput.value;
+                                } else {
+                                    gameContainer.style.display = "none";
+                                    audio.pause();
+                                    alert.innerHTML = "Annulation de la prise en compte de l'expérience.";
+                                    alert.style.display = "block";
+                                    if (localStorage.getItem('reloadCount')) {
+                                        // Retrieve the current count from localStorage
+                                        let counter = parseInt(localStorage.getItem('reloadCount'));
+                                        // Increment the count
+                                        counter++;
+                                        // Store the updated count back in localStorage
+                                        localStorage.setItem('reloadCount', counter.toString());
+                                    } else {
+                                        // If the 'reloadCount' key doesn't exist, initialize it to 1
+                                        localStorage.setItem('reloadCount', "1");
+                                    }
                                 }
                             }, 30 * secondesParX + 30 * secondesParMots + secondesFin + secondesAuDebut);
                         }, secondesFin);
