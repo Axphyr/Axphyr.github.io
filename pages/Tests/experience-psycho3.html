@@ -93,6 +93,9 @@
             position: fixed;
             top: 100px;
         }
+        #continuer{
+            padding: 50px;
+        }
     </style>
 </head>
 <body>
@@ -131,6 +134,7 @@
 <label class="lancer-checkbox-label" for="showButton">Je confirme avoir pris en compte les consignes.</label>
 <div id="game-container"></div>
 <audio id="audio" controls autoplay src="../../assets/audio/fireplace.mp3"></audio>
+<button id="continuer"></button>
 
 <script>
 
@@ -156,9 +160,8 @@
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
 
-        isAdmin = true;
-
         if (username === "admin" && md5(password) === "2e7b5284388721273c9bb65d72d9335a") {
+            isAdmin = true;
             console.log("logged in successfully")
             document.querySelector(".top-right").style.display = "none";
             const notification = document.createElement("div");
@@ -182,9 +185,59 @@
     const audio = document.getElementById("audio");
     const alert = document.getElementById("alert");
     const checkBoxLabel = document.querySelector(".lancer-checkbox-label");
+    const button = document.getElementById("continuer");
     let hasReloadedIncremented = false;
     audio.currentTime = 0
     audio.pause();
+    let hasClicked = false;
+    button.style.display = "none";
+    let leftFullScreen = false;
+    // Secondes parametrage (en ms)
+    const secondesAuDebut = 15000;
+    const secondesFin = 15000;
+    const secondesParX = 2000;
+    const secondesParMots = 3000;
+
+    button.addEventListener('click', function () {
+        hasClicked = true;
+        button.style.display = "none";
+        if(hasClicked){
+            console.log("inside")
+            audio.play();
+            setTimeout(() => {
+                if(!leftFullScreen){
+                    if (localStorage.getItem('reloadCount')) {
+                        // Retrieve the current count from localStorage
+                        let counter = parseInt(localStorage.getItem('reloadCount'));
+                        // Increment the count
+                        counter++;
+                        // Store the updated count back in localStorage
+                        localStorage.setItem('reloadCount', counter.toString());
+                    } else {
+                        // If the 'reloadCount' key doesn't exist, initialize it to 1
+                        localStorage.setItem('reloadCount', "1");
+                    }
+                    window.location = 'https://docs.google.com/forms/d/e/1FAIpQLSc6NZqhdPoxE9hm_uVYTlKuQp-DdWxXfdvg_X5sIenZj6V6PQ/viewform?usp=pp_url&entry.1046486360=FR';
+                } else {
+                    gameContainer.style.display = "none";
+                    audio.pause();
+                    alert.innerHTML = "Annulation de la prise en compte de l'expérience.";
+                    alert.style.display = "block";
+                    if (localStorage.getItem('reloadCount')) {
+                        // Retrieve the current count from localStorage
+                        let counter = parseInt(localStorage.getItem('reloadCount'));
+                        // Increment the count
+                        counter++;
+                        // Store the updated count back in localStorage
+                        localStorage.setItem('reloadCount', counter.toString());
+                    } else {
+                        // If the 'reloadCount' key doesn't exist, initialize it to 1
+                        localStorage.setItem('reloadCount', "1");
+                    }
+                }
+            }, 30 * secondesParX + 30 * secondesParMots + secondesFin + secondesAuDebut);
+        }
+    });
 
     // Check if the 'reloadCount' key exists in localStorage
     if (localStorage.getItem('reloadCount') && !isAdmin) {
@@ -255,7 +308,6 @@
 
         let currentRound = 0;
         let usedWords = [];
-        let leftFullScreen = false;
 
         const fullscreenChangeHandler = () => {
             if (screenType === "most" && !document.fullscreenElement) {
@@ -275,13 +327,6 @@
             usedWords.push(randomWord);
             return randomWord;
         }
-
-        // Secondes parametrage (en ms)
-        const secondesAuDebut = 15000;
-        const secondesFin = 15000;
-        const secondesParX = 2000;
-        const secondesParMots = 3000;
-
 
         // Add an event listener to listen for fullscreen change
         document.addEventListener("fullscreenchange", fullscreenChangeHandler);
@@ -316,16 +361,8 @@
                         gameContainer.style.display = "none";
                         count = 0;
                         setTimeout(() => {
-                            let hasClicked = false;
-
-                            const button = document.createElement('button');
-                            button.textContent = 'Continuer';
-
-                            button.addEventListener('click', function () {
-                                hasClicked = true;
-                            });
-
-                            document.body.appendChild(button);
+                            button.style.display = "block";
+                            console.log("displayed")
 
                             if(leftFullScreen){
                                 gameContainer.style.display = "none";
@@ -343,30 +380,6 @@
                                     // If the 'reloadCount' key doesn't exist, initialize it to 1
                                     localStorage.setItem('reloadCount', "1");
                                 }
-                                return;
-                            }
-                            if(hasClicked){
-                                setTimeout(() => {
-                                    if(!leftFullScreen){
-                                        window.location = 'https://docs.google.com/forms/d/e/1FAIpQLSc6NZqhdPoxE9hm_uVYTlKuQp-DdWxXfdvg_X5sIenZj6V6PQ/viewform?usp=pp_url&entry.1046486360=FR';
-                                    } else {
-                                        gameContainer.style.display = "none";
-                                        audio.pause();
-                                        alert.innerHTML = "Annulation de la prise en compte de l'expérience.";
-                                        alert.style.display = "block";
-                                        if (localStorage.getItem('reloadCount')) {
-                                            // Retrieve the current count from localStorage
-                                            let counter = parseInt(localStorage.getItem('reloadCount'));
-                                            // Increment the count
-                                            counter++;
-                                            // Store the updated count back in localStorage
-                                            localStorage.setItem('reloadCount', counter.toString());
-                                        } else {
-                                            // If the 'reloadCount' key doesn't exist, initialize it to 1
-                                            localStorage.setItem('reloadCount', "1");
-                                        }
-                                    }
-                                }, 30 * secondesParX + 30 * secondesParMots + secondesFin + secondesAuDebut);
                             }
                         }, secondesFin);
                         return;
