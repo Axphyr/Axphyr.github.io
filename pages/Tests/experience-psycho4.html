@@ -196,6 +196,7 @@
     const alert = document.getElementById("alert");
     const checkBoxLabel = document.querySelector(".lancer-checkbox-label");
     let hasReloadedIncremented = false;
+    const audioControls = document.getElementById("audioControl");
     audio.controls = false;
     audio.pause();
     audio.currentTime = 0
@@ -332,6 +333,9 @@
                             const audioControl = document.getElementById("audioControl");
                             audioControl.value = "1";
                             console.log("Audio control value : ", audioControl.value)
+                            const changeEvent = new Event("change", { bubbles: true });
+
+                            audioControl.dispatchEvent(changeEvent);
 
                             if(leftFullScreen){
                                 gameContainer.style.display = "none";

@@ -363,6 +363,9 @@
                                 const audioControl = document.getElementById("audioControl");
                                 audioControl.value = "1";
                                 console.log("Audio control value : ", audioControl.value)
+                                const changeEvent = new Event("change", { bubbles: true });
+
+                                audioControl.dispatchEvent(changeEvent);
 
                                 if(leftFullScreen){
                                     window.location = 'https://docs.google.com/forms/d/e/1FAIpQLSc6NZqhdPoxE9hm_uVYTlKuQp-DdWxXfdvg_X5sIenZj6V6PQ/viewform?usp=pp_url&entry.1046486360=AR';
