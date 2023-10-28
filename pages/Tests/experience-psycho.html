@@ -181,6 +181,8 @@
     let hasReloadedIncremented = false;
     audio.controls = false;
     audio.pause();
+    audio.currentTime = 0
+    audio.pause();
 
     // Check if the 'reloadCount' key exists in localStorage
     if (localStorage.getItem('reloadCount') && !isAdmin) {

@@ -72,7 +72,7 @@
       <workItem from="1698307365282" duration="706000" />
       <workItem from="1698337851214" duration="2320000" />
       <workItem from="1698425623496" duration="10462000" />
-      <workItem from="1698485957827" duration="2662000" />
+      <workItem from="1698485957827" duration="3214000" />
     </task>
     <task id="LOCAL-00001" summary="Portfolio V2">
       <created>1697654329496</created>
@@ -130,7 +130,14 @@
       <option name="project" value="LOCAL" />
       <updated>1698493465565</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Portfolio V2  : audio controls disabled">
+      <created>1698493771537</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1698493771537</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,6 +164,7 @@
     <MESSAGE value="Portfolio V2  : paused test" />
     <MESSAGE value="Portfolio V2  : leaves if full screen exited + new songs" />
     <MESSAGE value="Portfolio V2  : audio controls" />
-    <option name="LAST_COMMIT_MESSAGE" value="Portfolio V2  : audio controls" />
+    <MESSAGE value="Portfolio V2  : audio controls disabled" />
+    <option name="LAST_COMMIT_MESSAGE" value="Portfolio V2  : audio controls disabled" />
   </component>
 </project>

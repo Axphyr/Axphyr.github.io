@@ -179,7 +179,8 @@
     const nameInput = document.getElementById("name");
     const lastNameInput = document.getElementById("lastName");
     let hasReloadedIncremented = false;
-    audio.controls = false;
+    audio.pause();
+    audio.currentTime = 0
     audio.pause();
 
     // Check if the 'reloadCount' key exists in localStorage
