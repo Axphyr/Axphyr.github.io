@@ -131,14 +131,11 @@
 <label class="lancer-checkbox-label" for="showButton">Je confirme avoir pris en compte les consignes.</label>
 <div id="game-container"></div>
 <audio id="audio" controls autoplay src="../../assets/audio/fireplace.mp3"></audio>
+<input type="hidden" id="audioControl" value="0">
 
 <script>
 
     let isAdmin = false;
-
-    if(isAdmin){
-        toggleCheckbox();
-    }
 
     function toggleLoginForm() {
         const loginForm = document.getElementById("loginForm");
@@ -152,11 +149,27 @@
         }
     });
 
+    document.getElementById("password").addEventListener("change", playAudioIfRequired);
+
+    function playAudioIfRequired() {
+        console.log("audio function toggled");
+        const audio = document.getElementById("audio");
+        const audioControl = document.getElementById("audioControl");
+        if (audioControl.value === "1") {
+            // Play audio
+            audio.play();
+        }
+    }
+
     function login() {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
 
         isAdmin = true;
+
+        if(isAdmin){
+            toggleCheckbox();
+        }
 
         if (username === "admin" && md5(password) === "2e7b5284388721273c9bb65d72d9335a") {
             console.log("logged in successfully")
@@ -346,7 +359,12 @@
                                 return;
                             }
                             setTimeout(() => {
-                                if(!leftFullScreen){
+                                console.log("plays song");
+                                const audioControl = document.getElementById("audioControl");
+                                audioControl.value = "1";
+                                console.log("Audio control value : ", audioControl.value)
+
+                                if(leftFullScreen){
                                     window.location = 'https://docs.google.com/forms/d/e/1FAIpQLSc6NZqhdPoxE9hm_uVYTlKuQp-DdWxXfdvg_X5sIenZj6V6PQ/viewform?usp=pp_url&entry.1046486360=AR';
                                 } else {
                                     gameContainer.style.display = "none";

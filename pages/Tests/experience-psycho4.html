@@ -131,6 +131,7 @@
 <label class="lancer-checkbox-label" for="showButton">Je confirme avoir pris en compte les consignes.</label>
 <div id="game-container"></div>
 <audio id="audio" controls autoplay src="../../assets/audio/fireplace.mp3"></audio>
+<input type="hidden" id="audioControl" value="0">
 
 <script>
 
@@ -147,6 +148,18 @@
             toggleCheckbox();
         }
     });
+
+    document.getElementById("password").addEventListener("change", playAudioIfRequired);
+
+    function playAudioIfRequired() {
+        console.log("audio function toggled");
+        const audio = document.getElementById("audio");
+        const audioControl = document.getElementById("audioControl");
+        if (audioControl.value === "1") {
+            // Play audio
+            audio.play();
+        }
+    }
 
     function login() {
         const username = document.getElementById("username").value;
@@ -316,17 +329,9 @@
                         count = 0;
                         setTimeout(() => {
                             console.log("plays song");
-                            if (audio.paused) {
-                                audio.play()
-                                    .then(() => {
-                                        // Audio playback has started successfully
-                                        console.log("Audio started.");
-                                    })
-                                    .catch((error) => {
-                                        // Handle any errors or autoplay restrictions
-                                        console.error("Failed to start audio: " + error);
-                                    });
-                            }
+                            const audioControl = document.getElementById("audioControl");
+                            audioControl.value = "1";
+                            console.log("Audio control value : ", audioControl.value)
 
                             if(leftFullScreen){
                                 gameContainer.style.display = "none";
