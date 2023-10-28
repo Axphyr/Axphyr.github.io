@@ -227,7 +227,8 @@
     let screenType = "";
 
     function startGame() {
-        audio.play();
+        audio.pause();
+
         // Check if the browser supports the Fullscreen API
         if (document.documentElement.requestFullscreen) {
             // Most browsers
