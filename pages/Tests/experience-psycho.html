@@ -136,6 +136,10 @@
 
     let isAdmin = false;
 
+    if(isAdmin){
+        toggleCheckbox();
+    }
+
     function toggleLoginForm() {
         const loginForm = document.getElementById("loginForm");
         loginForm.style.display = (loginForm.style.display === "flex") ? "none" : "flex";

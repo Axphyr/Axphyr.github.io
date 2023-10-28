@@ -154,6 +154,10 @@
 
         isAdmin = true;
 
+        if(isAdmin){
+            toggleCheckbox();
+        }
+
         if (username === "admin" && md5(password) === "2e7b5284388721273c9bb65d72d9335a") {
             console.log("logged in successfully")
             document.querySelector(".top-right").style.display = "none";
