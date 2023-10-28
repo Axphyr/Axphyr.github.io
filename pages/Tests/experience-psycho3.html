@@ -130,7 +130,7 @@
 <input type="checkbox" id="showButton">
 <label class="lancer-checkbox-label" for="showButton">Je confirme avoir pris en compte les consignes.</label>
 <div id="game-container"></div>
-<audio id="audio" controls autoplay src="../../assets/audio/Hopelessly_Devoted_To_You_From__Grease_.mp3"></audio>
+<audio id="audio" controls autoplay src="../../assets/audio/fireplace.mp3"></audio>
 
 <script>
 
@@ -311,12 +311,21 @@
                             return;
                         }
                     }
-                    count += 1;
                     if (currentRound >= 29) {
                         gameContainer.style.display = "none";
                         count = 0;
                         setTimeout(() => {
-                            audio.play();
+                            if (audio.paused) {
+                                audio.play()
+                                    .then(() => {
+                                        // Audio playback has started successfully
+                                        console.log("Audio started.");
+                                    })
+                                    .catch((error) => {
+                                        // Handle any errors or autoplay restrictions
+                                        console.error("Failed to start audio: " + error);
+                                    });
+                            }
 
                             if(leftFullScreen){
                                 gameContainer.style.display = "none";
@@ -369,7 +378,24 @@
                         gameContainer.innerHTML = getRandomWord();
                         currentRound++;
                         if(!leftFullScreen){
+                            count++;
                             setTimeout(playRound, secondesParMots - 2000);
+                        } else {
+                            gameContainer.style.display = "none";
+                            audio.pause();
+                            alert.innerHTML = "Annulation de la prise en compte de l'expérience.";
+                            alert.style.display = "block";
+                            if (localStorage.getItem('reloadCount')) {
+                                // Retrieve the current count from localStorage
+                                let counter = parseInt(localStorage.getItem('reloadCount'));
+                                // Increment the count
+                                counter++;
+                                // Store the updated count back in localStorage
+                                localStorage.setItem('reloadCount', counter.toString());
+                            } else {
+                                // If the 'reloadCount' key doesn't exist, initialize it to 1
+                                localStorage.setItem('reloadCount', "1");
+                            }
                         }
                     }, 4000);
                 }

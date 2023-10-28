@@ -372,6 +372,7 @@
                         gameContainer.innerHTML = getRandomWord();
                         currentRound++;
                         if(!leftFullScreen){
+                            count++;
                             setTimeout(playRound, secondesParMots - 2000);
                         } else {
                             gameContainer.style.display = "none";

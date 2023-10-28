@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="701c9726-4bc4-4fe7-a63d-18ad5886917b" name="Changes" comment="" />
+    <list default="true" id="701c9726-4bc4-4fe7-a63d-18ad5886917b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/Tests/experience-psycho.html" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Tests/experience-psycho.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/Tests/experience-psycho2.html" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Tests/experience-psycho2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/Tests/experience-psycho3.html" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Tests/experience-psycho3.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/Tests/experience-psycho4.html" beforeDir="false" afterPath="$PROJECT_DIR$/pages/Tests/experience-psycho4.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,7 +78,8 @@
       <workItem from="1698307365282" duration="706000" />
       <workItem from="1698337851214" duration="2320000" />
       <workItem from="1698425623496" duration="10462000" />
-      <workItem from="1698485957827" duration="8238000" />
+      <workItem from="1698485957827" duration="8881000" />
+      <workItem from="1698501994534" duration="2216000" />
     </task>
     <task id="LOCAL-00001" summary="Portfolio V2">
       <created>1697654329496</created>
@@ -151,7 +158,14 @@
       <option name="project" value="LOCAL" />
       <updated>1698498679091</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Portfolio V2  : apple behaviour again">
+      <created>1698499686798</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1698499686798</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -181,6 +195,7 @@
     <MESSAGE value="Portfolio V2  : audio controls disabled" />
     <MESSAGE value="Portfolio V2  : prevent apple default audio behaviour" />
     <MESSAGE value="Portfolio V2  : changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Portfolio V2  : changes" />
+    <MESSAGE value="Portfolio V2  : apple behaviour again" />
+    <option name="LAST_COMMIT_MESSAGE" value="Portfolio V2  : apple behaviour again" />
   </component>
 </project>

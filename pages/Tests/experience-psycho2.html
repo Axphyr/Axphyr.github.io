@@ -313,7 +313,6 @@
                             return;
                         }
                     }
-                    count += 1;
                     if (currentRound >= 29) {
                         gameContainer.style.display = "none";
                         count = 0;
@@ -371,7 +370,24 @@
                         gameContainer.innerHTML = getRandomWord();
                         currentRound++;
                         if(!leftFullScreen){
+                            count++;
                             setTimeout(playRound, secondesParMots - 2000);
+                        } else {
+                            gameContainer.style.display = "none";
+                            audio.pause();
+                            alert.innerHTML = "Annulation de la prise en compte de l'expérience.";
+                            alert.style.display = "block";
+                            if (localStorage.getItem('reloadCount')) {
+                                // Retrieve the current count from localStorage
+                                let counter = parseInt(localStorage.getItem('reloadCount'));
+                                // Increment the count
+                                counter++;
+                                // Store the updated count back in localStorage
+                                localStorage.setItem('reloadCount', counter.toString());
+                            } else {
+                                // If the 'reloadCount' key doesn't exist, initialize it to 1
+                                localStorage.setItem('reloadCount', "1");
+                            }
                         }
                     }, 4000);
                 }
