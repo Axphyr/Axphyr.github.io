@@ -77,7 +77,7 @@
       <workItem from="1698337851214" duration="2320000" />
       <workItem from="1698425623496" duration="10462000" />
       <workItem from="1698485957827" duration="8881000" />
-      <workItem from="1698501994534" duration="13420000" />
+      <workItem from="1698501994534" duration="16827000" />
     </task>
     <task id="LOCAL-00001" summary="Portfolio V2">
       <created>1697654329496</created>
@@ -254,7 +254,14 @@
       <option name="project" value="LOCAL" />
       <updated>1698514500693</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Portfolio V2  : infinite loop correction">
+      <created>1698522140417</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1698522140417</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

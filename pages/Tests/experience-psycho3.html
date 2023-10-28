@@ -95,6 +95,7 @@
         }
         #continuer{
             padding: 50px;
+            background-color: black;
         }
     </style>
 </head>
@@ -133,7 +134,7 @@
 <input type="checkbox" id="showButton">
 <label class="lancer-checkbox-label" for="showButton">Je confirme avoir pris en compte les consignes.</label>
 <div id="game-container"></div>
-<audio id="audio" controls autoplay src="../../assets/audio/fireplace.mp3"></audio>
+<audio id="audio" controls autoplay src="../../assets/audio/Hopelessly_Devoted_To_You_From__Grease_.mp3"></audio>
 <button id="continuer"></button>
 
 <script>
@@ -178,7 +179,7 @@
         }
     }
 
-    const initialWords = ["CHAPEAU", "MIEL", "GROTTE", "SOURIS", "CARAVANE","VASE", "COUVERTURE", "PIEUVRE", "MUSELIERE", "OSSELET", "SUMO", "CASCADE", "INFIRMIERE", "DROGUE", "ABATTOIR","KERMESSE", "TELEVISEUR", "ESCABEAU", "PISSENLIT", "AVALANCHE", "RAYON", "KOALA", "MAISON", "TIRELIRE", "BOUSSOLE", "FLUTE", "SAUTERELLE", "ENVELOPPE", "VAISSELLE", "MACARON"];
+    const initialWords = ["CHAPEAU", "CITRON", "GROTTE", "SOURIS", "CARAVANE","VASE", "COUVERTURE", "PIEUVRE", "MUSELIERE", "OSSELET", "SUMO", "CASCADE", "INFIRMIERE", "CANNABIS", "ABATTOIR","KERMESSE", "TELEVISEUR", "ESCABEAU", "PISSENLIT", "AVALANCHE", "RAYON", "KOALA", "MUR", "TIRELIRE", "BOUSSOLE", "TROMPETTE", "COCCINELLE", "ENVELOPPE", "VAISSELLE", "MACARON"];
     const gameContainer = document.getElementById("game-container");
     const lancerButton = document.querySelector(".lancer");
     const showButtonCheckbox = document.getElementById("showButton");
@@ -217,7 +218,7 @@
                         // If the 'reloadCount' key doesn't exist, initialize it to 1
                         localStorage.setItem('reloadCount', "1");
                     }
-                    window.location = 'https://docs.google.com/forms/d/e/1FAIpQLSc6NZqhdPoxE9hm_uVYTlKuQp-DdWxXfdvg_X5sIenZj6V6PQ/viewform?usp=pp_url&entry.1046486360=FR';
+                    window.location = 'https://docs.google.com/forms/d/e/1FAIpQLSc6NZqhdPoxE9hm_uVYTlKuQp-DdWxXfdvg_X5sIenZj6V6PQ/viewform?usp=pp_url&entry.1046486360=AR';
                 } else {
                     gameContainer.style.display = "none";
                     audio.pause();
@@ -357,7 +358,7 @@
                         }
                     }
 
-                    if (currentRound >= 29) {
+                    if (currentRound >= 30) {
                         gameContainer.style.display = "none";
                         count = 0;
                         setTimeout(() => {
@@ -385,6 +386,14 @@
                         return;
                     }
 
+                    let timing = 2000;
+
+                    if(count === 29){
+                        timing = 0;
+                    } else {
+                        timing = 2000;
+                    }
+
                     setTimeout(() => {
                         gameContainer.innerHTML = "X";
                     }, secondesParX);
@@ -394,7 +403,7 @@
                         currentRound++;
                         if(!leftFullScreen){
                             count++;
-                            setTimeout(playRound, secondesParMots - 2000);
+                            setTimeout(playRound, secondesParMots - timing);
                         } else {
                             gameContainer.style.display = "none";
                             audio.pause();
