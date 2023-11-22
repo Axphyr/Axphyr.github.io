@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="701c9726-4bc4-4fe7-a63d-18ad5886917b" name="Changes" comment="" />
+    <list default="true" id="701c9726-4bc4-4fe7-a63d-18ad5886917b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -11,6 +13,11 @@
     <execution />
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="n" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitSEFilterConfiguration">
@@ -39,7 +46,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/pages/Tests" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../CFP/app-cfp" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
@@ -74,6 +81,10 @@
       <workItem from="1698425623496" duration="10462000" />
       <workItem from="1698485957827" duration="8881000" />
       <workItem from="1698501994534" duration="16982000" />
+      <workItem from="1698570403533" duration="66000" />
+      <workItem from="1698571211251" duration="793000" />
+      <workItem from="1698584862665" duration="17000" />
+      <workItem from="1698653712018" duration="68000" />
     </task>
     <task id="LOCAL-00001" summary="Portfolio V2">
       <created>1697654329496</created>
@@ -264,7 +275,14 @@
       <option name="project" value="LOCAL" />
       <updated>1698525864628</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Portfolio V2  : song change">
+      <created>1698570463637</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1698570463637</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -307,6 +325,7 @@
     <MESSAGE value="Portfolio V2  : audio yet again (paused)" />
     <MESSAGE value="Portfolio V2  : infinite loop correction" />
     <MESSAGE value="Portfolio V2  : end of my sufferings" />
-    <option name="LAST_COMMIT_MESSAGE" value="Portfolio V2  : end of my sufferings" />
+    <MESSAGE value="Portfolio V2  : song change" />
+    <option name="LAST_COMMIT_MESSAGE" value="Portfolio V2  : song change" />
   </component>
 </project>

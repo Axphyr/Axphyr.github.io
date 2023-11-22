@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #container {
+            text-align: center;
+        }
+
+        #inputText {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        #result {
+            font-size: 20px;
+        }
+    </style>
+    <title>Letter and Word Counter</title>
+</head>
+<body>
+    <div id="container">
+        <label for="inputText">Enter text:</label>
+        <textarea id="inputText" rows="5" placeholder="Type here..."></textarea>
+        <p id="result">Number of letters: 0 | Number of words: 0</p>
+    </div>
+
+    <script>
+        document.getElementById('inputText').addEventListener('input', function () {
+            var inputText = this.value;
+            var letterCount = countLetters(inputText);
+            var wordCount = countWords(inputText);
+            document.getElementById('result').innerText = 'Number of letters: ' + letterCount + ' | Number of words: ' + wordCount;
+        });
+
+        function countLetters(text) {
+            var excludedChars = [' ', ',', '.', '\n', '\r', '\t', "'", '"', '(', ')', '[', ']'];
+
+            var filteredText = text.split('').filter(function (char) {
+                return excludedChars.indexOf(char) === -1;
+            }).join('');
+
+            return filteredText.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ]/g, '').length;
+        }
+
+        function countWords(text) {
+            var words = text.trim().split(/\s+/);
+            var nonEmptyWords = words.filter(function (word) {
+                return word.length > 0;
+            });
+            return nonEmptyWords.length;
+        }
+    </script>
+</body>
+</html>
