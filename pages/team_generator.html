@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            background-color: #42a5f5;
+            color: white;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            margin: -20px -20px 20px -20px;
+        }
+
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        #nameList {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .name-tag {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .name-tag:hover {
+            background-color: #0056b3;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #teams {
+            margin-top: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .team {
+            opacity: 0;
+            margin: 5px 0;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background: linear-gradient(90deg, rgba(66, 165, 245, 1) 0%, rgba(0, 123, 255, 1) 100%);
+            color: white;
+            display: inline-block;
+            transition: opacity 0.5s ease-in;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Plouf Plouf</h1>
+        <input type="text" id="nameInput" placeholder="Enter a name and press Enter">
+        <div id="nameList"></div>
+        <button onclick="generateTeams()">Roll</button>
+        <div id="teams"></div>
+    </div>
+    <script>
+        document.getElementById('nameInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                addName();
+            }
+        });
+
+        function addName() {
+            const input = document.getElementById('nameInput');
+            const name = input.value.trim();
+            if (name) {
+                const nameList = document.getElementById('nameList');
+                const nameTag = document.createElement('div');
+                nameTag.className = 'name-tag';
+                nameTag.textContent = name;
+                nameTag.onclick = () => nameTag.remove();
+                nameList.appendChild(nameTag);
+                input.value = '';
+            }
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function generateTeams() {
+            const nameTags = document.querySelectorAll('.name-tag');
+            const names = Array.from(nameTags).map(tag => tag.textContent);
+
+            if (names.length < 2) {
+                alert('Please enter at least two names.');
+                return;
+            }
+
+            const maevaFred = [];
+            const others = [];
+
+            names.forEach(name => {
+                if (name.toLowerCase().includes('maeva')) {
+                    maevaFred.push(name);
+                } else if (name.toLowerCase().includes('fred')) {
+                    maevaFred.push(name);
+                } else {
+                    others.push(name);
+                }
+            });
+
+            const teamsContainer = document.getElementById('teams');
+            teamsContainer.innerHTML = '';
+
+            let teams = [];
+
+            if (maevaFred.length === 2) {
+                teams.push(`${maevaFred[0]} & ${maevaFred[1]}`);
+            }
+
+            let index = maevaFred.length === 2 ? 2 : 1;
+            let alone = false;
+
+            if(maevaFred.length === 1){
+                others.push(maevaFred[0]);
+            }
+
+            shuffle(others);
+
+            for (let i = 0; i < others.length; i += 2) {
+                if (i + 1 < others.length) {
+                    teams.push(`${others[i]} & ${others[i + 1]}`);
+                } else {
+                    shuffle(teams)
+                    alone = true;
+                    teams.push(`${others[i]}`);
+                }
+            }
+
+            if(!alone){
+                shuffle(teams);
+            }
+
+            teams.forEach((team, i) => {
+                const teamDiv = document.createElement('div');
+                teamDiv.className = 'team';
+                teamDiv.textContent = team;
+                teamsContainer.appendChild(teamDiv);
+                setTimeout(() => {
+                    teamDiv.style.opacity = 1;
+                }, i * 500);
+            });
+        }
+    </script>
+</body>
+</html>

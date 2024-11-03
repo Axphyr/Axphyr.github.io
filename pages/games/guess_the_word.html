@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Guess the French Word</title>
+    <style>
+        * {
+            color: rgb(255, 226, 240);
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: rgb(8, 4, 23);
+        }
+
+        .game-container {
+            text-align: center;
+        }
+
+        .game-container * {
+            color: rgb(255, 226, 240);
+        }
+
+        #guess-input {
+            padding: 5px;
+            color: black;
+        }
+
+        #feedback-container {
+            margin-bottom: 10px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .feedback-line {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        .feedback-case {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 5px;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .orange {
+            background-color: orange;
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        #guess-button {
+            color: black;
+        }
+
+        .card-inner {
+            width: 85%;
+            height: 85%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.999s;
+        }
+
+        .rotate {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+        }
+
+        .card-front {
+            background-color: #6A2C70;
+            display: flex;
+            align-items: center;
+            border: 10px solid #6A2C70;
+            border-radius: 2px;
+            justify-content: center;
+            font-size: 24px;
+            transform: rotateY(0deg);
+        }
+
+        .card-back {
+            background-color: #fff;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            border: 10px solid transparent;
+            border-radius: 2px;
+            justify-content: center;
+            font-size: 24px;
+            transform: rotateY(180deg);
+        }
+
+
+    </style>
+</head>
+<body>
+    <h1>Guess the French Word</h1>
+    <div class="game-container">
+        <div id="feedback-container"></div>
+        <input type="text" id="guess-input">
+        <button onclick="checkGuess()" id="guess-button">Enter</button>
+    </div>
+    <script>
+        let triesLeft = 5;
+        let currentLine = 0;
+        let selectedWord = '';
+
+        // Function to fetch a random French word
+        async function getRandomFrenchWord() {
+            try {
+                const wordLength = Math.floor(Math.random() * (7 - 4 + 1)) + 4;
+                const apiUrl = `https://random-word-api.herokuapp.com/word?lang=fr&length=${wordLength}`;
+
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                const randomFrenchWord = data[0];
+
+                selectedWord = randomFrenchWord;
+
+                createLines(selectedWord.length);
+                setMaxInputLength(selectedWord.length);
+            } catch (error) {
+                console.log('Error fetching word:', error);
+            }
+        }
+
+        getRandomFrenchWord();
+        
+        function setMaxInputLength(maxLength) {
+            document.getElementById('guess-input').maxLength = maxLength;
+        }
+
+        function createLines(wordLength) {
+            const feedbackContainer = document.getElementById('feedback-container');
+            for (let line = 0; line < triesLeft; line++) {
+                feedbackContainer.innerHTML += `<div class="feedback-line" id="line${line}">${createBoxes(wordLength)}</div>`;
+            }
+        }
+
+        function createBoxes(wordLength) {
+            let boxes = '';
+            for (let i = 0; i < wordLength; i++) {
+                boxes += `
+                <div class="feedback-case" id="box${i}">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <p></p>
+                        </div>
+                        <div class="card-back">
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }
+            return boxes;
+        }
+
+        function checkGuess() {
+            const guessInput = document.getElementById('guess-input').value.toLowerCase();
+            const feedbackContainer = document.getElementById('feedback-container');
+            const letters = document.getElementById(`line${currentLine}`).children;
+
+            if (guessInput.length === selectedWord.length) {
+                // First pass: mark correct letters
+                const correctLetters = Array(selectedWord.length).fill(false);
+                for (let i = 0; i < selectedWord.length; i++) {
+                    const letter = guessInput[i];
+                    const letterElement = letters[i].querySelector('.card-back p');
+                    const letterBack = letters[i].querySelector('.card-back');
+
+                    if (letter === selectedWord[i]) {
+                        letterElement.textContent = letter;
+                        letterBack.style.backgroundColor = 'green';
+                        letterBack.style.borderColor = 'green';
+                        correctLetters[i] = true;
+                    }
+                }
+
+                // Second pass: mark misplaced letters
+                for (let i = 0; i < selectedWord.length; i++) {
+                    const letter = guessInput[i];
+                    const letterElement = letters[i].querySelector('.card-back p');
+                    const letterBack = letters[i].querySelector('.card-back');
+
+                    if (!correctLetters[i] && selectedWord.includes(letter)) {
+                        let countInWord = 0;
+                        let countInGuess = 0;
+
+                        // Count occurrences of the letter in the word
+                        for (let j = 0; j < selectedWord.length; j++) {
+                            if (selectedWord[j] === letter) countInWord++;
+                        }
+
+                        // Count occurrences of the letter in the guess up to the current index
+                        for (let j = 0; j <= i; j++) {
+                            if (guessInput[j] === letter) countInGuess++;
+                        }
+
+                        if (countInGuess <= countInWord) {
+                            letterElement.textContent = letter;
+                            letterBack.style.backgroundColor = 'orange';
+                            letterBack.style.borderColor = 'orange';
+                        }
+                    }
+
+                    // If the letter is not correct or misplaced, set text color to black
+                    if (letterElement.style.backgroundColor !== 'green' && letterElement.style.backgroundColor !== 'orange') {
+                        letterElement.style.color = 'black';
+                    }
+                }
+
+                updateWordBoxes(selectedWord, guessInput, currentLine);
+
+                triesLeft--;
+
+                if (triesLeft === 0 || guessInput === selectedWord) {
+                    document.getElementById('guess-input').disabled = true;
+                    document.getElementById('guess-button').disabled = true;
+                }
+
+                currentLine++;
+            }
+        }
+
+        function updateWordBoxes(word, guess, line) {
+            for (let i = 0; i < word.length; i++) {
+                const boxElement = document.getElementById(`line${line}`).querySelector(`#box${i} .card-back p`);
+                boxElement.textContent = guess[i];
+
+                setTimeout(() => {
+                    const cardInner = document.getElementById(`line${line}`).querySelector(`#box${i} .card-inner`);
+                    cardInner.classList.add('rotate');
+                }, i * 200);
+            }
+        }
+    </script>
+</body>
+</html>

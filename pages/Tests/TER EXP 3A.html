@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exp.</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .container3 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .container2 {
+            position: absolute; 
+            left: 0; 
+            right: 0; 
+            margin-inline: auto; 
+            width: fit-content;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        #experiment-screen {
+            height: 150px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin-top: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #minute-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 150px;
+        }
+
+        /* Grille invisible pour le test 1 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-template-rows: repeat(10, 1fr);
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .grid div {
+            width: 100%;
+            height: 100%;
+        }
+
+        .circle {
+            width: 125px;
+            height: 125px;
+            background-color: black;
+            border-radius: 50%;
+            position: absolute;
+            visibility: hidden;
+        }
+
+        /* Canvas pour dessiner le trait de la souris */
+        #drawing-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Derrière tout le reste */
+        }
+
+        #experiment-video {
+            position: absolute; 
+            left: 0; 
+            right: 0; 
+            margin-inline: auto; 
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Canvas pour dessiner le trait de la souris -->
+    <canvas id="drawing-canvas"></canvas>
+    
+    <div class="container3" id="welcome-screen">
+        <h1>Bienvenue dans cette expérience</h1>
+        <p>Veuillez entrer le code de votre test :</p>
+        <input type="text" id="test-code" placeholder="Entrez le numéro du test (1, 2 ou 3)">
+        <button onclick="startTest()">Commencer</button>
+    </div>
+
+    <!-- Condition Acceptation -->
+    <div class="container3 hidden" id="condition-screen">
+        <h2 id="condition-title">Conditions</h2>
+        <p id="condition-text"></p>
+        <label style="color: rgb(223, 41, 41);" id="condition-text-label">
+            <input type="checkbox" id="accept-conditions"> J'accepte les conditions.
+        </label>
+
+        <p id="condition-spec-text" class="hidden"></p>
+        <label style="color: rgb(223, 41, 41);" class="hidden" id="condition-spec-label">
+            <input type="checkbox" id="condition-spec"> J'accepte cette condition et fera de mon mieux pour y adhérer.
+        </label>
+        <button id="start-experiment" onclick="launchExperiment()" disabled>Lancer l'expérience</button>
+    </div>
+
+    <!-- Ecran de l'expérience -->
+    <div class="container hidden" id="experiment-screen">
+        <!-- Grille pour le test 1 -->
+        <div class="grid hidden" id="circle-grid">
+            <div></div> <!-- 100 cells will be created dynamically -->
+        </div>
+        <div class="circle" id="circle"></div>
+
+        <!-- Ajout de la vidéo pour les essais du test 3 -->
+        <video id="experiment-video" class="hidden"></video>
+    </div>
+
+    <div class="container2" style="text-align: center; font-size: x-large;">
+        <p id="countdown" class="hidden">Préparez-vous...</p>
+        <p id="trial-number"></p>
+    </div>
+    
+    <!-- Bouton "Je pense que ça fait 1 min" -->
+    <button id="minute-button" class="hidden" onclick="endTrialEarly()">Je pense que ça fait 1 min</button>
+
+    <script>
+        let currentTest = null;
+        let trial = 0;  // Nombre d'essais
+        let maxTrials = 10;  // Maximum d'essais
+        let experimentDuration = 3 * 60 * 1000;  // 3 minutes en millisecondes
+        let experimentStartTime;  // Moment du début de l'expérience
+        let countdownTimer;
+        let trialTimer;
+        let betweenTrialsTimer;
+        let videoIndex = 0;
+        let videos = [
+            '../../videos/tests/ter/exp/video1.mp4',
+            '../../videos/tests/ter/exp/video2.mp4',
+            '../../videos/tests/ter/exp/video3.mp4',
+            '../../videos/tests/ter/exp/video4.mp4',
+            '../../videos/tests/ter/exp/video5.mp4',
+            '../../videos/tests/ter/exp/video6.mp4',
+            '../../videos/tests/ter/exp/video7.mp4',
+            '../../videos/tests/ter/exp/video8.mp4',
+            '../../videos/tests/ter/exp/video9.mp4',
+            '../../videos/tests/ter/exp/video10.mp4'
+        ];
+        
+        let isDrawing = false; // Variable pour déterminer si le dessin est activé
+        const canvas = document.getElementById('drawing-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Ajuster la taille du canvas
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function startTest() {
+            const testCode = document.getElementById('test-code').value;
+            if (testCode === "1" || testCode === "2" || testCode === "3") {
+                currentTest = testCode;
+                showConditionsScreen();
+            } else {
+                alert("Veuillez entrer un numéro de test valide (1, 2 ou 3).");
+            }
+        }
+
+        function showConditionsScreen() {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('condition-screen').classList.remove('hidden');
+
+            let conditionText = "";
+            if (currentTest === "1") {
+                conditionText = "\nEnvironnement calme : Assurez-vous d'être dans un lieu exempt de distractions.\n\n Concentration exclusive : N'effectuez pas de prises de notes ni d'utilisation d'aides extérieures.\n\n Navigation web : Ne quittez pas la page de l'expérience sous peine d'annulation de participation.\n\n Durée : Prévoyez suffisamment de temps pour compléter l'expérience sans interruptions.\n\n Honnêteté : Soyez honnête dans vos réponses et actions, sans chercher à tromper les résultats.\n";
+                conditionSpec = "\n Condition rapide : Essayez d'atteindre les cercles le plus rapidement possible.";
+            } else if (currentTest === "2") {
+                conditionText = "\nEnvironnement calme : Assurez-vous d'être dans un lieu exempt de distractions.\n\n Concentration exclusive : N'effectuez pas de prises de notes ni d'utilisation d'aides extérieures.\n\n Navigation web : Ne quittez pas la page de l'expérience sous peine d'annulation de participation.\n\n Durée : Prévoyez suffisamment de temps pour compléter l'expérience sans interruptions.\n\n Honnêteté : Soyez honnête dans vos réponses et actions, sans chercher à tromper les résultats.\n";
+                conditionSpec = "\n Condition lente : Essayez d'atteindre les cercles de sorte à ce qu'un trait plein soit formé ; plus vous êtes rapides, moins il y a de points qui forment le trait.";
+            } else if (currentTest === "3") {
+                conditionText = "\nEnvironnement calme : Assurez-vous d'être dans un lieu exempt de distractions.\n\n Concentration exclusive : N'effectuez pas de prises de notes ni d'utilisation d'aides extérieures.\n\n Navigation web : Ne quittez pas la page de l'expérience sous peine d'annulation de participation.\n\n Durée : Prévoyez suffisamment de temps pour compléter l'expérience sans interruptions.\n\n Honnêteté : Soyez honnête dans vos réponses et actions, sans chercher à tromper les résultats.\n";
+                conditionSpec = "\n Condition vidéo : Appuyez sur le bouton lorsque vous pensez que ça fait 1min que vous visionnez la vidéo.";
+            }
+
+            document.getElementById('condition-text').innerText = conditionText;
+            document.getElementById('condition-spec-text').innerText = conditionSpec;
+
+            // Activer le bouton si les conditions sont acceptées
+            document.getElementById('accept-conditions').addEventListener('change', function () {
+                if(document.getElementById('condition-spec-text').classList.contains('hidden')) {
+                    document.getElementById('condition-spec-text').classList.remove('hidden');
+                    document.getElementById('condition-spec-label').classList.remove('hidden');
+
+                    document.getElementById('condition-text').classList.add('hidden');
+                    document.getElementById('condition-text-label').classList.add('hidden');
+
+                    document.getElementById('condition-spec').addEventListener('change', function () {
+                        document.getElementById('start-experiment').disabled = !this.checked;
+                    });
+                }
+            });
+        }
+
+        function launchExperiment() {
+            document.getElementById('condition-screen').classList.add('hidden');
+            document.getElementById('experiment-screen').classList.remove('hidden');
+            experimentStartTime = Date.now();
+            startTrial();  // Lancer le premier essai
+            activateFullScreen();
+            monitorFullScreenExit();
+
+            // Événement pour le mouvement de la souris
+            document.addEventListener('mousemove', (event) => {
+                if (isDrawing) {
+                    ctx.fillStyle = 'black';
+                    ctx.beginPath();
+                    ctx.arc(event.clientX, event.clientY, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+        }
+
+        function startTrial() {
+            if (trial >= maxTrials || (Date.now() - experimentStartTime) >= experimentDuration) {
+                endExperiment();
+                return;
+            }
+
+            trial++;
+            document.getElementById('countdown').classList.remove('hidden');
+            document.getElementById('trial-number').innerText = "Essai " + trial + " sur " + maxTrials;
+            document.getElementById('minute-button').classList.add('hidden');  // Cacher le bouton avant chaque compte à rebours
+            startCountdown();
+        }
+
+        function startCountdown() {
+            let countdown = 3;  // Compte à rebours de 3 secondes avant chaque essai
+            document.getElementById('countdown').innerText = countdown;
+            document.getElementById('trial-number').classList.remove('hidden');
+            
+            countdownTimer = setInterval(() => {
+                countdown--;
+                document.getElementById('countdown').innerText = countdown;
+
+                if (countdown === 0) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    clearInterval(countdownTimer);
+                    runTrial();  // Lancer l'essai après le compte à rebours
+                }
+            }, 1000);
+        }
+
+        function runTrial() {
+            document.getElementById('countdown').classList.add('hidden');
+            document.getElementById('trial-number').classList.add('hidden');
+            document.getElementById('minute-button').classList.remove('hidden');  // Afficher le bouton pendant l'essai
+
+            if (currentTest === "3") {
+                playVideoTrial();  // Pour le test 3, jouer une vidéo
+            } else if (currentTest === "1") {
+                runCircleTrial();  // Pour le test 1, lancer le cercle aléatoire
+            } else {
+                runCircleTrial(); // Test 2
+            }
+        }
+
+        // Lancer le test avec le cercle qui apparait aléatoirement
+        function runCircleTrial() {
+            const grid = document.getElementById('circle-grid');
+            grid.classList.remove('hidden');
+            moveCircleRandomly(); // Déplace immédiatement le cercle
+        }
+
+        // Déplacer le cercle de façon aléatoire
+        function moveCircleRandomly() {
+            isDrawing = true;
+            const circle = document.getElementById('circle');
+            const randomX = Math.floor(Math.random() * 90); // Positionnement aléatoire dans la grille
+            const randomY = Math.floor(Math.random() * 90);
+            circle.style.top = `${randomY}%`;
+            circle.style.left = `${randomX}%`;
+            circle.style.visibility = 'visible';
+
+            // Attendre que l'utilisateur survole le cercle
+            circle.onmouseenter = () => {
+                isDrawing = false;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                circle.style.visibility = 'hidden';
+                setTimeout(moveCircleRandomly, 500); // Attendre 0.5s avant de déplacer
+            };
+        }
+
+        function playVideoTrial() {
+            const videoElement = document.getElementById('experiment-video');
+            videoElement.src = videos[videoIndex];
+            videoElement.classList.remove('hidden');
+            videoElement.play();
+
+            videoElement.onended = () => {
+                endTrial();  // Terminer l'essai automatiquement quand la vidéo se termine
+            };
+        }
+
+        function endTrial() {
+            document.getElementById('countdown').classList.remove('hidden');
+            document.getElementById('countdown').innerText = "Préparez vous...";
+            document.getElementById('minute-button').classList.add('hidden');  // Cacher le bouton après l'essai
+
+            if (currentTest === "3") {
+                const videoElement = document.getElementById('experiment-video');
+                videoElement.classList.add('hidden');
+                videoIndex++;  // Passer à la vidéo suivante
+            } else if (currentTest === "1") {
+                const circle = document.getElementById('circle');
+                circle.style.visibility = 'hidden'; // Cacher le cercle
+            }
+
+            // Pause de 2 secondes entre les essais
+            betweenTrialsTimer = setTimeout(() => {
+                startTrial();  // Passer à l'essai suivant
+            }, 2000);
+        }
+
+        function endTrialEarly() {
+            clearTimeout(trialTimer);  // Arrêter l'essai en cours
+
+            if (currentTest === "3") {
+                const videoElement = document.getElementById('experiment-video');
+                videoElement.pause();  // Mettre fin à la vidéo si c'est le test 3
+            } else if (currentTest === "1") {
+                const circle = document.getElementById('circle');
+                circle.style.visibility = 'hidden';  // Cacher le cercle immédiatement
+            }
+
+            endTrial();  // Terminer l'essai immédiatement
+        }
+
+        function endExperiment() {
+            clearInterval(countdownTimer);
+            clearTimeout(trialTimer);
+            clearTimeout(betweenTrialsTimer);
+            alert("L'expérience est terminée.");
+            location.reload();  // Recharger la page pour tout réinitialiser
+        }
+
+        function activateFullScreen() {
+            const element = document.documentElement;
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.mozRequestFullScreen) { // Firefox
+                element.mozRequestFullScreen();
+            } else if (element.webkitRequestFullscreen) { // Chrome, Safari, Opera
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) { // IE/Edge
+                element.msRequestFullscreen();
+            }
+        }
+
+        function monitorFullScreenExit() {
+            document.addEventListener('fullscreenchange', exitFullScreenHandler);
+            document.addEventListener('webkitfullscreenchange', exitFullScreenHandler);
+            document.addEventListener('mozfullscreenchange', exitFullScreenHandler);
+            document.addEventListener('MSFullscreenChange', exitFullScreenHandler);
+        }
+
+        function exitFullScreenHandler() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+                alert("Vous avez quitté le plein écran. L'expérience est terminée.");
+                location.reload();  // Recharge la page pour recommencer
+            }
+        }
+    </script>
+</body>
+</html>
