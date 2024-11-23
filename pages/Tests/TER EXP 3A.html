@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exp.</title>
     <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.18.0/js/md5.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("OSoGqXrFMqxl9Miuk");
+        })();
+    </script>
     <style>
         * {
             margin: 0;
@@ -29,7 +36,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            max-width: 400px;
+            max-width: 600px;
             width: 100%;
         }
 
@@ -42,7 +49,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
+            max-width: 500px;
             width: 100%;
         }
 
@@ -94,7 +101,7 @@
             padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
-            width: 150px;
+            max-width: 300px;
         }
 
         /* Grille invisible pour le test 1 */
@@ -140,6 +147,111 @@
             height: 100%;
         }
 
+        .loader {
+            --color: #a5a5b0;
+            --size: 70px;
+            width: var(--size);
+            height: var(--size);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+        }
+
+        .loader span {
+            width: 100%;
+            height: 100%;
+            background-color: var(--color);
+            animation: keyframes-blink 0.6s alternate infinite linear;
+        }
+
+        .loader span:nth-child(1) {
+            animation-delay: 0ms;
+        }
+
+        .loader span:nth-child(2) {
+            animation-delay: 200ms;
+        }
+
+        .loader span:nth-child(3) {
+            animation-delay: 300ms;
+        }
+
+        .loader span:nth-child(4) {
+            animation-delay: 400ms;
+        }
+
+        .loader span:nth-child(5) {
+            animation-delay: 500ms;
+        }
+
+        .loader span:nth-child(6) {
+            animation-delay: 600ms;
+        }
+
+        @keyframes keyframes-blink {
+            0% {
+                opacity: 0.3;
+                transform: scale(0.5) rotate(5deg);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .container-form {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .container-form h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        .question {
+            margin: 20px 0;
+        }
+        .container-form label {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .options {
+            display: flex;
+            gap: 20px;
+        }
+        .options label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .options input {
+            margin-right: 10px;
+        }
+        .container-form .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .container-form .alert {
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -148,28 +260,30 @@
     
     <div class="container3" id="welcome-screen">
         <h1>Bienvenue dans cette expérience</h1>
-        <p>Veuillez entrer le code de votre test :</p>
-        <input type="text" id="test-code" placeholder="Entrez le numéro du test (1, 2 ou 3)">
-        <button onclick="startTest()">Commencer</button>
+        <p style="margin: 20px; font-size: larger;">Veuillez entrer le code de votre test :</p>
+        <input type="text" id="test-code" style="font-size: larger;" placeholder="Entrez le numéro du test">
+        <button onclick="startTest()" style="font-size: larger;">Commencer</button>
     </div>
 
     <!-- Condition Acceptation -->
     <div class="container3 hidden" id="condition-screen">
-        <h2 id="condition-title">Conditions</h2>
-        <p id="condition-text"></p>
+        <h1 id="condition-title">Conditions</h2>
+        <p id="condition-text" style="font-size: larger;"></p>
         <label style="color: rgb(223, 41, 41);" id="condition-text-label">
-            <input type="checkbox" id="accept-conditions"> J'accepte les conditions.
+            <input type="checkbox" id="accept-conditions" style="font-size: larger;"> J'accepte les conditions.
         </label>
 
-        <p id="condition-spec-text" class="hidden"></p>
+        <p id="condition-spec-text" class="hidden" style="font-size: larger;"></p>
         <label style="color: rgb(223, 41, 41);" class="hidden" id="condition-spec-label">
-            <input type="checkbox" id="condition-spec"> J'accepte cette condition et fera de mon mieux pour y adhérer.
+            <input type="checkbox" id="condition-spec" style="font-size: larger;"> J'accepte cette condition et fera de mon mieux pour y adhérer.
         </label>
-        <button id="start-experiment" onclick="launchExperiment()" disabled>Lancer l'expérience</button>
+        <button id="start-experiment" onclick="launchExperiment()" style="font-size: larger;" disabled>Lancer l'expérience</button>
     </div>
 
     <!-- Ecran de l'expérience -->
-    <div class="container hidden" id="experiment-screen">
+    <div class="container3 hidden" id="experiment-screen">
+        <p id="trial-number-training" style="font-size: xx-large; margin-top: 15px; color: red;">(ENTRAÎNEMENT)</p>
+        <p id="trial-number" style="font-size: xx-large; margin-top: 10px;"></p>
         <!-- Grille pour le test 1 -->
         <div class="grid hidden" id="circle-grid">
             <div></div> <!-- 100 cells will be created dynamically -->
@@ -181,18 +295,66 @@
     </div>
 
     <div class="container2" style="text-align: center; font-size: x-large;">
-        <p id="countdown" class="hidden">Préparez-vous...</p>
-        <p id="trial-number"></p>
+        <p id="countdown" class="hidden" style="font-size: 42px;">Préparez-vous...</p>
+        <div class="loader">
+            <span class="load-spinner hidden"></span>
+            <span class="load-spinner hidden"></span>
+            <span class="load-spinner hidden"></span>
+            <span class="load-spinner hidden"></span>
+            <span class="load-spinner hidden"></span>
+            <span class="load-spinner hidden"></span>
+        </div>    
+    </div>
+
+    <!-- Questionnaire -->
+    <div class="container-form hidden" id="form-qt">
+        <h1>Questionnaire</h1>
+        <form id="questionnaireForm">
+            <div class="question">
+                <label>Avez-vous plus de 18 ans ?</label>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="1"> Oui</label>
+                    <label><input type="radio" name="q1" value="0"> Non</label>
+                </div>
+            </div>
+            <div class="question">
+                <label>Êtes-vous disponible pour 2 heures d'expérience ?</label>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="1"> Oui</label>
+                    <label><input type="radio" name="q2" value="0"> Non</label>
+                </div>
+            </div>
+            <div class="question">
+                <label>Avez-vous déjà participé à une étude similaire ?</label>
+                <div class="options">
+                    <label><input type="radio" name="q3" value="0"> Oui</label>
+                    <label><input type="radio" name="q3" value="1"> Non</label>
+                </div>
+            </div>
+            <div class="question">
+                <label>Avez-vous des allergies spécifiques au matériel utilisé ?</label>
+                <div class="options">
+                    <label><input type="radio" name="q4" value="0"> Oui</label>
+                    <label><input type="radio" name="q4" value="1"> Non</label>
+                </div>
+            </div>
+            <button type="button" class="btn" onclick="submitForm()">Soumettre</button>
+        </form>
+        <p id="alertMessage" class="alert"></p>
     </div>
     
     <!-- Bouton "Je pense que ça fait 1 min" -->
-    <button id="minute-button" class="hidden" onclick="endTrialEarly()">Je pense que ça fait 1 min</button>
+    <button id="minute-button" class="hidden" onclick="endTrialEarly()" style="font-size: larger;">Je pense que ça fait 1 min</button>
 
     <script>
         let currentTest = null;
         let trial = 0;  // Nombre d'essais
-        let maxTrials = 10;  // Maximum d'essais
+        let maxTrials = 5;  // Maximum d'essais
+        let testTrials = 3; // Nombre d'essais d'entraînement
         let experimentDuration = 3 * 60 * 1000;  // 3 minutes en millisecondes
+        let trialDurations = [];
+        let trialStartTime;
+        let trialEndTime;
         let experimentStartTime;  // Moment du début de l'expérience
         let countdownTimer;
         let trialTimer;
@@ -210,6 +372,79 @@
             '../../videos/tests/ter/exp/video9.mp4',
             '../../videos/tests/ter/exp/video10.mp4'
         ];
+
+        let videosLentes = [
+            '../../videos/tests/ter/exp/video1.mp4',
+            '../../videos/tests/ter/exp/video2.mp4',
+            '../../videos/tests/ter/exp/video3.mp4',
+            '../../videos/tests/ter/exp/video4.mp4',
+            '../../videos/tests/ter/exp/video5.mp4',
+            '../../videos/tests/ter/exp/video6.mp4',
+            '../../videos/tests/ter/exp/video7.mp4',
+            '../../videos/tests/ter/exp/video8.mp4',
+            '../../videos/tests/ter/exp/video9.mp4',
+            '../../videos/tests/ter/exp/video10.mp4'
+        ];
+
+        const entries1 = [
+            "090da94e827106cfb4ad9969ab11cad5",
+            "35f0a2e0640fb54912a7cae046c38afa",
+            "45cac0b0b14ff5b97e19e76e717efb42",
+            "6d659da8b9b23a880e4960190d6a03d3",
+            "95c412d277eaa29cb623cfed90510987",
+            "b110493be3614b85ebc520972389d33a",
+            "cf4786dbe0c5364c9f7bd35cc4361fb2",
+            "f46af3aa92d2798c60372306121117bd"
+        ];
+        const entries2 = [
+            "0db4d0eedb7c90d402897ec3a07b622e",
+            "3ccab13151283ac8319f8227b6fc371f",
+            "48d56e4fced14d48ed2b1f251e91cc86",
+            "718c97066b84fbda905ebec987f1a15d",
+            "95d684a8e8aa7b27954dffd830531f44",
+            "b88122f1416f72a3520dd80a39c54f98",
+            "db41f791a0bb17f3c2f1a591a5aa710b",
+            "f4df54b579e3e92584edb2ea903d6a63"
+        ];
+        const entries3 = [
+            "11f73087c3111e92cbb69fbb64a51a6b",
+            "3e1a4dddb02a6d483d80b794af8b527c",
+            "4c6c65ec8e29d30ff929deec96aa283f",
+            "89ac3e398a2741e8faeeaf65478452e2",
+            "9639828edde5e997f76354ba8b2d143a",
+            "c17f9224d9a2c39d31f70d9637d23285",
+            "dfa19597e975cdad79d54577d66a1c43"
+        ];
+        const entries4 = [
+            "2ece41bc13c5c7579a2e29b94fce8ede",
+            "43edd7281886951680b32718bc540011",
+            "6a34a3ea2ed5262157368358adaff132",
+            "89acc3b76db28083ee172502666674ca",
+            "a79206cdd2ab64edf2f4d82852d4c721",
+            "c569106554fab26ec9bfd1c2bac0026e",
+            "fdc8a4a1493908ac2fb940424e5e51a9"
+        ];
+
+        let lastMouseX = null;
+        let lastMouseY = null;
+        let lastMouseTime = null;
+
+        // Élément d'alerte rouge
+        const alertDiv = document.createElement('div');
+        alertDiv.innerText = "Ne bougez pas trop vite votre souris dans cette condition !";
+        alertDiv.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: red;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            display: none; /* Caché par défaut */
+            z-index: 1000;
+        `;
+        document.body.appendChild(alertDiv);
         
         let isDrawing = false; // Variable pour déterminer si le dessin est activé
         const canvas = document.getElementById('drawing-canvas');
@@ -220,17 +455,71 @@
         canvas.height = window.innerHeight;
 
         function startTest() {
-            const testCode = document.getElementById('test-code').value;
-            if (testCode === "1" || testCode === "2" || testCode === "3") {
-                currentTest = testCode;
-                showConditionsScreen();
+            const testCode = md5(document.getElementById('test-code').value);
+
+            if(entries1.indexOf(testCode) != -1) {
+                currentTest = "1";
+            } else if(entries2.indexOf(testCode) != -1) {
+                currentTest = "2";
+            } else if(entries3.indexOf(testCode) != -1) {
+                currentTest = "3";
+            } else if(entries4.indexOf(testCode) != -1) {
+                currentTest = "4";
+            }
+
+            if (currentTest != null && !localStorage.getItem("user_test_code")) {
+                document.getElementById('welcome-screen').classList.add('hidden');
+                document.getElementById('form-qt').classList.remove('hidden');
             } else {
-                alert("Veuillez entrer un numéro de test valide (1, 2 ou 3).");
+                alert("Numéro de test invalide, vous avez déjà participé ou votre participation a été révoquée.");
+            }
+        }
+
+        function submitForm() {
+            const form = document.getElementById('questionnaireForm');
+            const alertMessage = document.getElementById('alertMessage');
+            alertMessage.textContent = ""; // Clear previous message
+
+            let totalPoints = 0;
+            let allAnswered = true;
+
+            // Parcourir les questions
+            ['q1', 'q2', 'q3', 'q4'].forEach(question => {
+                const radios = form.elements[question];
+                let answered = false;
+
+                for (let i = 0; i < radios.length; i++) {
+                    if (radios[i].checked) {
+                        totalPoints += parseInt(radios[i].value, 10);
+                        answered = true;
+                        break;
+                    }
+                }
+
+                if (!answered) {
+                    allAnswered = false;
+                }
+            });
+
+            if (!allAnswered) {
+                alertMessage.textContent = "Veuillez répondre à toutes les questions.";
+                return;
+            }
+
+            // Enregistrer le code utilisateur dans le local storage
+            localStorage.setItem("user_test_code", document.getElementById('test-code').value);
+
+            // Vérification du score total
+            if (totalPoints > 2) { // Seuil ajustable selon vos critères
+                alert("Critères remplis ! Les conditions vont être affichées.");
+                showConditionsScreen(); // Fonction à implémenter pour afficher les conditions
+            } else {
+                alert("Désolé, vous ne correspondez pas aux critères pour participer.");
+                location.reload();  // Recharge la page pour recommencer
             }
         }
 
         function showConditionsScreen() {
-            document.getElementById('welcome-screen').classList.add('hidden');
             document.getElementById('condition-screen').classList.remove('hidden');
 
             let conditionText = "";
@@ -242,7 +531,10 @@
                 conditionSpec = "\n Condition lente : Essayez d'atteindre les cercles de sorte à ce qu'un trait plein soit formé ; plus vous êtes rapides, moins il y a de points qui forment le trait.";
             } else if (currentTest === "3") {
                 conditionText = "\nEnvironnement calme : Assurez-vous d'être dans un lieu exempt de distractions.\n\n Concentration exclusive : N'effectuez pas de prises de notes ni d'utilisation d'aides extérieures.\n\n Navigation web : Ne quittez pas la page de l'expérience sous peine d'annulation de participation.\n\n Durée : Prévoyez suffisamment de temps pour compléter l'expérience sans interruptions.\n\n Honnêteté : Soyez honnête dans vos réponses et actions, sans chercher à tromper les résultats.\n";
-                conditionSpec = "\n Condition vidéo : Appuyez sur le bouton lorsque vous pensez que ça fait 1min que vous visionnez la vidéo.";
+                conditionSpec = "\n Condition vidéo rapide : Appuyez sur le bouton lorsque vous pensez que ça fait 1min que vous visionnez la vidéo.";
+            } else if (currentTest === "4") {
+                conditionText = "\nEnvironnement calme : Assurez-vous d'être dans un lieu exempt de distractions.\n\n Concentration exclusive : N'effectuez pas de prises de notes ni d'utilisation d'aides extérieures.\n\n Navigation web : Ne quittez pas la page de l'expérience sous peine d'annulation de participation.\n\n Durée : Prévoyez suffisamment de temps pour compléter l'expérience sans interruptions.\n\n Honnêteté : Soyez honnête dans vos réponses et actions, sans chercher à tromper les résultats.\n";
+                conditionSpec = "\n Condition vidéo lente : Appuyez sur le bouton lorsque vous pensez que ça fait 1min que vous visionnez la vidéo.";
             }
 
             document.getElementById('condition-text').innerText = conditionText;
@@ -272,15 +564,41 @@
             activateFullScreen();
             monitorFullScreenExit();
 
+            let code = parseInt(currentTest);
+
             // Événement pour le mouvement de la souris
             document.addEventListener('mousemove', (event) => {
-                if (isDrawing) {
-                    ctx.fillStyle = 'black';
-                    ctx.beginPath();
-                    ctx.arc(event.clientX, event.clientY, 2, 0, Math.PI * 2);
-                    ctx.fill();
+            if (isDrawing) {
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(event.clientX, event.clientY, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Calculer la vitesse du mouvement
+                const currentTime = Date.now();
+                if (lastMouseX !== null && lastMouseY !== null && lastMouseTime !== null) {
+                    const deltaX = event.clientX - lastMouseX;
+                    const deltaY = event.clientY - lastMouseY;
+                    const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+                    const timeDelta = currentTime - lastMouseTime;
+
+                    const speed = distance / timeDelta; // Vitesse en pixels par milliseconde
+
+                    // Condition lente (exemple : condition 2)
+                    if (code === 2 && speed > 0.8) {
+                        alertDiv.style.display = 'block'; // Affiche l'alerte
+                        setTimeout(() => {
+                            alertDiv.style.display = 'none'; // Cache après 1 secondes
+                        }, 1000);
+                    }
                 }
-            });
+
+                // Mettre à jour les dernières coordonnées et temps
+                lastMouseX = event.clientX;
+                lastMouseY = event.clientY;
+                lastMouseTime = currentTime;
+            }
+        });
         }
 
         function startTrial() {
@@ -290,10 +608,20 @@
             }
 
             trial++;
+
+            document.getElementById('countdown').innerText = "Préparez vous...";
             document.getElementById('countdown').classList.remove('hidden');
-            document.getElementById('trial-number').innerText = "Essai " + trial + " sur " + maxTrials;
-            document.getElementById('minute-button').classList.add('hidden');  // Cacher le bouton avant chaque compte à rebours
-            startCountdown();
+
+            setTimeout(() => {
+                if(trial <= testTrials && document.getElementById('trial-number-training').classList.contains('hidden')) {
+                    document.getElementById('trial-number-training').classList.remove('hidden');
+                }
+                document.getElementById('trial-number').innerText = "Essai " + trial + " sur " + maxTrials;
+                document.getElementById('experiment-screen').classList.add('container3');
+                document.getElementById('experiment-screen').classList.remove('container');
+                document.getElementById('minute-button').classList.add('hidden');  // Cacher le bouton avant chaque compte à rebours
+                startCountdown();
+            }, 2000);
         }
 
         function startCountdown() {
@@ -308,6 +636,15 @@
                 if (countdown === 0) {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     clearInterval(countdownTimer);
+
+                    if(!document.getElementById('trial-number-training').classList.contains('hidden')) {
+                        document.getElementById('trial-number-training').classList.add('hidden');
+                    }
+                    
+                    document.getElementById('experiment-screen').classList.remove('container3');
+                    document.getElementById('experiment-screen').classList.add('container');
+
+                    trialStartTime = Date.now();
                     runTrial();  // Lancer l'essai après le compte à rebours
                 }
             }, 1000);
@@ -322,8 +659,10 @@
                 playVideoTrial();  // Pour le test 3, jouer une vidéo
             } else if (currentTest === "1") {
                 runCircleTrial();  // Pour le test 1, lancer le cercle aléatoire
-            } else {
+            } else if (currentTest === "2") {
                 runCircleTrial(); // Test 2
+            } else if (currentTest === "4") {
+                playVideoTrial(); // Test 4
             }
         }
 
@@ -355,7 +694,13 @@
 
         function playVideoTrial() {
             const videoElement = document.getElementById('experiment-video');
-            videoElement.src = videos[videoIndex];
+            
+            if(currentTest == "4") {
+                videoElement.src = videosLentes[videoIndex]
+            } else {
+                videoElement.src = videos[videoIndex];
+            }
+
             videoElement.classList.remove('hidden');
             videoElement.play();
 
@@ -365,15 +710,19 @@
         }
 
         function endTrial() {
-            document.getElementById('countdown').classList.remove('hidden');
+            // Calcul durée de l'essai
+            trialEndTime = Date.now();
+            trialDurations.push(trialEndTime - trialStartTime);  // Durée en millisecondes
+
             document.getElementById('countdown').innerText = "Préparez vous...";
+            document.getElementById('countdown').classList.remove('hidden');
             document.getElementById('minute-button').classList.add('hidden');  // Cacher le bouton après l'essai
 
-            if (currentTest === "3") {
+            if (currentTest === "3" || currentTest === "4") {
                 const videoElement = document.getElementById('experiment-video');
                 videoElement.classList.add('hidden');
                 videoIndex++;  // Passer à la vidéo suivante
-            } else if (currentTest === "1") {
+            } else if (currentTest === "1" || currentTest === "2") {
                 const circle = document.getElementById('circle');
                 circle.style.visibility = 'hidden'; // Cacher le cercle
             }
@@ -387,10 +736,10 @@
         function endTrialEarly() {
             clearTimeout(trialTimer);  // Arrêter l'essai en cours
 
-            if (currentTest === "3") {
+            if (currentTest === "3" || currentTest === "4") {
                 const videoElement = document.getElementById('experiment-video');
-                videoElement.pause();  // Mettre fin à la vidéo si c'est le test 3
-            } else if (currentTest === "1") {
+                videoElement.pause();  // Mettre fin à la vidéo si c'est le test vidéo
+            } else if (currentTest === "1" || currentTest === "2") {
                 const circle = document.getElementById('circle');
                 circle.style.visibility = 'hidden';  // Cacher le cercle immédiatement
             }
@@ -399,11 +748,11 @@
         }
 
         function endExperiment() {
+            sendEmail();
+            localStorage.setItem("user_test_code", document.getElementById('test-code').value);
             clearInterval(countdownTimer);
             clearTimeout(trialTimer);
             clearTimeout(betweenTrialsTimer);
-            alert("L'expérience est terminée.");
-            location.reload();  // Recharger la page pour tout réinitialiser
         }
 
         function activateFullScreen() {
@@ -431,6 +780,39 @@
                 alert("Vous avez quitté le plein écran. L'expérience est terminée.");
                 location.reload();  // Recharge la page pour recommencer
             }
+        }
+
+        function sendEmail() {
+            let formattedResults = "";
+            for (let i = 0; i < trialDurations.length; i++) {
+                let duration = trialDurations[i];
+                if (i < testTrials) {
+                    formattedResults += `Essai ${i + 1} (Entrainement) : ${duration} millisecondes\n`;
+                } else {
+                    formattedResults += `Essai ${i + 1} : ${duration} millisecondes\n`;
+                }
+            }
+
+            document.getElementById('countdown').classList.add('hidden');
+
+            const load_spinners = document.getElementsByClassName("load-spinner");
+            for (let i = 0; i < load_spinners.length; i++) {
+                load_spinners.item(i).classList.remove('hidden');
+            }
+
+            emailjs.send("service_p9brh5z", "template_5zjx1a2", {
+                message: formattedResults // message : le texte formaté
+            }).then((response) => {
+                document.getElementById('countdown').innerText = "Expérience terminée, merci de votre participation.";
+            }).catch((error) => {
+                document.getElementById('countdown').innerText = "Échec de l'envoi des données de l'expérience. Pourriez-vous fournir ceci à votre coordinateur ? Merci ! ";
+            }).finally(() => {
+                // Cache l'animation
+                for (let i = 0; i < load_spinners.length; i++) {
+                    load_spinners.item(i).classList.add('hidden');
+                }
+                document.getElementById('countdown').classList.remove('hidden');
+            });
         }
     </script>
 </body>
