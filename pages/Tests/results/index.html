@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        .container {
+            width: 65%;
+            min-width: 500px;
+            max-width: 2000px;
+            margin: 0 auto;
+            padding: 18px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 18px;
+            font-size: 1.8em;
+            color: #555;
+        }
+
+        button {
+            margin: 5px;
+            padding: 5px 10px;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 18px;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 7px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        canvas {
+            margin: 18px 0;
+        }
+
+        .chart-container {
+            margin: 18px 0;
+        }
+
+        .collapsible {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .collapsible-content {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .link-input-container {
+            display: flex;
+            margin-bottom: 5px;
+            align-items: center;
+        }
+
+        .link-input-container input {
+            flex: 1;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="results-title">Résultats</h1>
+
+        <!-- Collapsible pour ajouter des liens -->
+        <div class="collapsible" onclick="toggleCollapsible()">Ajouter des liens</div>
+        <div class="collapsible-content">
+            <div id="links-container"></div>
+            <button onclick="addLinkInput()">+</button>
+        </div>
+
+        <!-- Bouton Calculer -->
+        <button onclick="fetchResultsFromLinks()">Calculer</button>
+
+        <!-- Conteneur pour les tableaux -->
+        <div id="tables-container"></div>
+
+        <!-- Conteneur pour les graphiques -->
+        <div id="charts-container"></div>
+        <div id="chartsContainer"></div>
+
+    </div>
+
+    <script>
+        let isCollapsibleOpen = false;
+        const chartsContainer = document.getElementById('chartsContainer');
+
+        function toggleCollapsible() {
+            isCollapsibleOpen = !isCollapsibleOpen;
+            document.querySelector('.collapsible-content').style.display = isCollapsibleOpen ? 'block' : 'none';
+        }
+
+        function addLinkInput() {
+            const container = document.getElementById('links-container');
+            const inputContainer = document.createElement('div');
+            inputContainer.classList.add('link-input-container');
+            inputContainer.innerHTML = `
+                <input type="text" placeholder="Lien vers les résultats">
+                <button onclick="removeLinkInput(this)">-</button>
+            `;
+            container.appendChild(inputContainer);
+        }
+
+        function removeLinkInput(button) {
+            button.parentElement.remove();
+        }
+
+        async function fetchResultsFromLinks() {
+            const links = [...document.querySelectorAll('#links-container input')]
+                .map(input => input.value.trim())
+                .filter(link => link);
+
+            if (links.length === 0) {
+                const currentUrl = window.location.href;
+                const params = new URLSearchParams(new URL(currentUrl).search);
+                if (Array.from(params.keys()).length > 0) {
+                    links.push(currentUrl);
+                } else {
+                    alert("Aucun lien n'a été fourni, et aucun paramètre n'est présent dans l'URL actuelle.");
+                    return;
+                }
+            }
+
+            const results = [];
+            for (const link of links) {
+                const url = new URL(link);
+                const params = new URLSearchParams(url.search);
+
+                const motors = params.get('motors') ? JSON.parse(decodeURIComponent(params.get('motors'))) : [];
+                const visuals = params.get('visuals') ? JSON.parse(decodeURIComponent(params.get('visuals'))) : [];
+                const speed = params.get('speed') || 'Inconnu';
+                results.push({ motors, visuals, speed });
+            }
+
+            if (results.length === 1) {
+                const speed = results[0].speed;
+                document.getElementById('results-title').textContent = `Résultats (condition ${speed})`;
+                displaySingleResults(results[0]);
+            } else {
+                document.getElementById('results-title').textContent = 'Résultats';
+                displayComparisonResults(results);
+            }
+        }
+
+        function displaySingleResults(data) {
+            const tablesContainer = document.getElementById('tables-container');
+            const chartsContainer = document.getElementById('charts-container');
+            tablesContainer.innerHTML = '';
+            chartsContainer.innerHTML = '';
+
+            const createTable = (title, data) => {
+                const table = document.createElement('table');
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Temps Réel (s)</th>
+                            <th>Temps Estimé (s)</th>
+                            <th>Différence (s)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map((time, index) => `
+                            <tr>
+                                <td>${title} ${index + 1}</td>
+                                <td>${(time / 1000).toFixed(2)}</td>
+                                <td>${(60000 / 1000).toFixed(2)}</td>
+                                <td>${((time - 60000) / 1000).toFixed(2)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                `;
+                tablesContainer.appendChild(table);
+            };
+
+            createTable('Moteur', data.motors);
+            createTable('Visuel', data.visuals);
+
+            createLineChart('Temps Moteurs', data.motors.map(x => x / 1000), chartsContainer);
+            createLineChart('Temps Visuels', data.visuals.map(x => x / 1000), chartsContainer);
+        }
+
+        function createLineChart(title, data, container) {
+            const canvas = document.createElement('canvas');
+            container.appendChild(canvas);
+
+            new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: data.map((_, i) => `Essai ${i + 1}`),
+                    datasets: [{
+                        label: title,
+                        data,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: false
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        function displayComparisonResults(results) {
+            const tablesContainer = document.getElementById('tables-container');
+            const chartsContainer = document.getElementById('charts-container');
+            tablesContainer.innerHTML = '';
+            chartsContainer.innerHTML = '';
+
+            const averages = results.reduce((acc, { motors, visuals, speed }) => {
+                const motorAvg = motors.reduce((a, b) => a + b, 0) / motors.length;
+                const visualAvg = visuals.reduce((a, b) => a + b, 0) / visuals.length;
+                acc[speed] = acc[speed] || { motors: [], visuals: [] };
+                acc[speed].motors.push(motorAvg);
+                acc[speed].visuals.push(visualAvg);
+                return acc;
+            }, {});
+
+            const createConditionTable = (data) => {
+                const table = document.createElement('table');
+                table.classList.add('styled-table');
+
+                const thead = table.createTHead();
+                const headerRow = thead.insertRow();
+                headerRow.innerHTML = `
+                    <th>Condition</th>
+                    <th>Visuel (s)</th>
+                    <th>Moteur (s)</th>
+                `;
+
+                const tbody = table.createTBody();
+                Object.entries(data).forEach(([speed, times]) => {
+                    const row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td>${speed.charAt(0).toUpperCase() + speed.slice(1)}</td>
+                        <td>${(times.visuals[0] / 1000).toFixed(2)}</td>
+                        <td>${(times.motors[0] / 1000).toFixed(2)}</td>
+                    `;
+                });
+
+                return table;
+            };
+
+            const createComparisonTable = (data) => {
+                const table = document.createElement('table');
+                table.classList.add('styled-table');
+
+                const thead = table.createTHead();
+                const headerRow = thead.insertRow();
+                headerRow.innerHTML = `
+                    <th>Condition</th>
+                    <th>Rapide (s)</th>
+                    <th>Lente (s)</th>
+                `;
+
+                const tbody = table.createTBody();
+                ['visuals', 'motors'].forEach((key) => {
+                    const row = tbody.insertRow();
+
+                    const rapideValue = data.rapide && data.rapide[key] ? data.rapide[key][0] / 1000 : 'Données manquantes';
+                    const lenteValue = data.lente && data.lente[key] ? data.lente[key][0] / 1000 : 'Données manquantes';
+
+                    row.innerHTML = `
+                        <td>${key === 'motors' ? 'Moteur' : 'Visuel'}</td>
+                        <td>${typeof rapideValue === 'number' ? rapideValue.toFixed(2) : rapideValue}</td>
+                        <td>${typeof lenteValue === 'number' ? lenteValue.toFixed(2) : lenteValue}</td>
+                    `;
+                });
+
+                return table;
+            };
+
+            const conditionTable = createConditionTable(averages);
+            const comparisonTable = createComparisonTable(averages);
+            tablesContainer.appendChild(conditionTable);
+            tablesContainer.appendChild(comparisonTable);
+
+            const createLineChart = (type, data) => {
+                const ctx = document.createElement('canvas');
+                chartsContainer.appendChild(ctx);
+
+                const labels = [];
+                const motorsData = [];
+                const visualsData = [];
+
+                Object.entries(data).forEach(([speed, times]) => {
+                    if (times && Array.isArray(times.motors) && Array.isArray(times.visuals)) {
+                        const averageMotors = times.motors.reduce((a, b) => a + b, 0) / times.motors.length;
+                        const averageVisuals = times.visuals.reduce((a, b) => a + b, 0) / times.visuals.length;
+
+                        labels.push(speed);
+                        motorsData.push(averageMotors / 1000);
+                        visualsData.push(averageVisuals / 1000);
+                    } else {
+                        console.error(`Invalid data for speed "${speed}":`, times);
+                    }
+                });
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Moteur (s)',
+                                data: motorsData,
+                                borderColor: 'blue',
+                                backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                                fill: false
+                            },
+                            {
+                                label: 'Visuel (s)',
+                                data: visualsData,
+                                borderColor: 'green',
+                                backgroundColor: 'rgba(0, 255, 0, 0.1)',
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: `Comparaison des Moyennes des Temps (${type})`
+                            }
+                        },
+                        scales: {
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Temps (s)'
+                                },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            };
+
+            createLineChart('Comparaison des Conditions', averages);
+        }
+
+
+        document.addEventListener("DOMContentLoaded", fetchResultsFromLinks);
+
+    </script>
+</body>
+</html>

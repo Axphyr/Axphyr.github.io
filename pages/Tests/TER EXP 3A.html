@@ -252,6 +252,15 @@
             text-align: center;
             margin-top: 20px;
         }
+
+        #message_container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
@@ -265,6 +274,20 @@
         <button onclick="startTest()" style="font-size: larger;">Commencer</button>
     </div>
 
+    <div class="container3 hidden" id="first_condition">
+        <h1>Consentement</h1>
+        <p style="margin: 20px; font-size: larger;">Avant de commencer ce questionnaire, veuillez lire attentivement les informations suivantes :</p>
+        <p style="margin: 20px; font-size: medium;">
+            Ce questionnaire est anonyme et les données recueillies seront utilisées uniquement dans le cadre de cette expérience.
+            Vous êtes libre de participer ou non, et vous pouvez arrêter à tout moment sans avoir à vous justifier.
+            En répondant à ce questionnaire, vous acceptez de participer volontairement à cette étude.
+            Souhaitez-vous continuer et donner votre consentement ?
+        </p>
+
+        <button onclick="conditions(true)" style="font-size: larger;">Oui, je donne mon consentement.</button>
+        <button onclick="conditions(false)" style="font-size: larger;">Non, je ne souhaite pas participer.</button>
+    </div>
+
     <!-- Condition Acceptation -->
     <div class="container3 hidden" id="condition-screen">
         <h1 id="condition-title">Conditions</h2>
@@ -272,17 +295,12 @@
         <label style="color: rgb(223, 41, 41);" id="condition-text-label">
             <input type="checkbox" id="accept-conditions" style="font-size: larger;"> J'accepte les conditions.
         </label>
-
-        <p id="condition-spec-text" class="hidden" style="font-size: larger;"></p>
-        <label style="color: rgb(223, 41, 41);" class="hidden" id="condition-spec-label">
-            <input type="checkbox" id="condition-spec" style="font-size: larger;"> J'accepte cette condition et fera de mon mieux pour y adhérer.
-        </label>
         <button id="start-experiment" onclick="launchExperiment()" style="font-size: larger;" disabled>Lancer l'expérience</button>
     </div>
 
     <!-- Ecran de l'expérience -->
     <div class="container3 hidden" id="experiment-screen">
-        <p id="trial-number-training" style="font-size: xx-large; margin-top: 15px; color: red;">(ENTRAÎNEMENT)</p>
+        <p id="trial-number-training" style="font-size: xx-large; margin-top: 15px; color: red;" class="hidden">(ENTRAÎNEMENT)</p>
         <p id="trial-number" style="font-size: xx-large; margin-top: 10px;"></p>
         <!-- Grille pour le test 1 -->
         <div class="grid hidden" id="circle-grid">
@@ -310,118 +328,142 @@
     <div class="container-form hidden" id="form-qt">
         <h1>Questionnaire</h1>
         <form id="questionnaireForm">
-            <div class="question">
-                <label>Avez-vous plus de 18 ans ?</label>
+            <div class="question" id="gender_question">
+                <label>Quel est votre genre ?</label>
                 <div class="options">
-                    <label><input type="radio" name="q1" value="1"> Oui</label>
-                    <label><input type="radio" name="q1" value="0"> Non</label>
+                    <label><input type="radio" name="q5" value="Homme">Homme</label>
+                    <label><input type="radio" name="q5" value="Femme">Femme</label>
+                    <label><input type="radio" name="q5" value="Autre">Autre</label>
                 </div>
             </div>
             <div class="question">
-                <label>Êtes-vous disponible pour 2 heures d'expérience ?</label>
+                <label>Quel est votre âge ?</label>
                 <div class="options">
-                    <label><input type="radio" name="q2" value="1"> Oui</label>
-                    <label><input type="radio" name="q2" value="0"> Non</label>
+                    <label><input type="number" id="age_question" name="q6" min="18"></label>
                 </div>
             </div>
             <div class="question">
-                <label>Avez-vous déjà participé à une étude similaire ?</label>
+                <label>Avez-vous des troubles de la vue importants ?</label>
                 <div class="options">
-                    <label><input type="radio" name="q3" value="0"> Oui</label>
-                    <label><input type="radio" name="q3" value="1"> Non</label>
+                    <label><input type="radio" name="q1" value="1" class="toggle-input" data-target="q1-details"> Oui</label>
+                    <label><input type="radio" name="q1" value="0" class="toggle-input" data-target="q1-details"> Non</label>
+                </div>
+                <div id="q1-details" class="details hidden">
+                    <label>Précisez :</label>
+                    <input type="text" name="q1-details-input" id="trouble1" placeholder="Exemples : très mauvaise vue même avec des lunettes, vision partielle, strabisme important, etc.">
                 </div>
             </div>
             <div class="question">
-                <label>Avez-vous des allergies spécifiques au matériel utilisé ?</label>
+                <label>Avez-vous des troubles qui peuvent influencer votre façon de voir ou de bouger ?</label>
                 <div class="options">
-                    <label><input type="radio" name="q4" value="0"> Oui</label>
-                    <label><input type="radio" name="q4" value="1"> Non</label>
+                    <label><input type="radio" name="q2" value="1" class="toggle-input" data-target="q2-details"> Oui</label>
+                    <label><input type="radio" name="q2" value="0" class="toggle-input" data-target="q2-details"> Non</label>
+                </div>
+                <div id="q2-details" class="details hidden">
+                    <label>Précisez :</label>
+                    <input type="text" name="q2-details-input" id="trouble2" placeholder="Exemples : trouble de l’attention (TDAH), difficultés d’apprentissage, etc.">
                 </div>
             </div>
             <button type="button" class="btn" onclick="submitForm()">Soumettre</button>
         </form>
         <p id="alertMessage" class="alert"></p>
     </div>
+
+    <div class="container hidden" id="message_container">
+        <div id="messsage_bf_condition" style="font-size: large; margin-bottom: 15px;"></div>
+        <button type="button" class="btn hidden" id="message_btn" onclick="validate()" style="font-size: large;">Confirmer</button>
+    </div>
     
     <!-- Bouton "Je pense que ça fait 1 min" -->
-    <button id="minute-button" class="hidden" onclick="endTrialEarly()" style="font-size: larger;">Je pense que ça fait 1 min</button>
+    <button id="minute-button" class="hidden" onclick="endTrial()" style="font-size: larger;">Je pense que ça fait 1 min</button>
 
     <script>
         let currentTest = null;
-        let trial = 0;  // Nombre d'essais
-        let maxTrials = 5;  // Maximum d'essais
+        let trial = 1;  // Essai actuel
+        let motorTrials = 12;
+        let visualTrials = 12;
         let testTrials = 3; // Nombre d'essais d'entraînement
-        let experimentDuration = 3 * 60 * 1000;  // 3 minutes en millisecondes
+        let VtestTrials = 3; // Nombre d'essais d'entraînement
+        let maxTrials = motorTrials + visualTrials + testTrials + VtestTrials;  // Maximum d'essais
         let trialDurations = [];
         let trialStartTime;
         let trialEndTime;
-        let experimentStartTime;  // Moment du début de l'expérience
         let countdownTimer;
         let trialTimer;
         let betweenTrialsTimer;
         let videoIndex = 0;
+        let expOrder = [];
+        let visualDone = 0;
+        let motorDone = 0;
+        let videoTrial = false;
         let videos = [
-            '../../videos/tests/ter/exp/video1.mp4',
-            '../../videos/tests/ter/exp/video2.mp4',
-            '../../videos/tests/ter/exp/video3.mp4',
-            '../../videos/tests/ter/exp/video4.mp4',
-            '../../videos/tests/ter/exp/video5.mp4',
-            '../../videos/tests/ter/exp/video6.mp4',
-            '../../videos/tests/ter/exp/video7.mp4',
-            '../../videos/tests/ter/exp/video8.mp4',
-            '../../videos/tests/ter/exp/video9.mp4',
-            '../../videos/tests/ter/exp/video10.mp4'
+            '../../videos/tests/ter/exp/rapide1.mp4',
+            '../../videos/tests/ter/exp/rapide2.mp4',
+            '../../videos/tests/ter/exp/rapide3.mp4',
+            '../../videos/tests/ter/exp/rapide4.mp4',
+            '../../videos/tests/ter/exp/rapide5.mp4',
+            '../../videos/tests/ter/exp/rapide6.mp4',
+            '../../videos/tests/ter/exp/rapide7.mp4',
+            '../../videos/tests/ter/exp/rapide8.mp4',
+            '../../videos/tests/ter/exp/rapide9.mp4',
+            '../../videos/tests/ter/exp/rapide10.mp4',
+            '../../videos/tests/ter/exp/rapide11.mp4',
+            '../../videos/tests/ter/exp/rapide12.mp4',
+            '../../videos/tests/ter/exp/rapide13.mp4',
+            '../../videos/tests/ter/exp/rapide14.mp4',
+            '../../videos/tests/ter/exp/rapide15.mp4'
         ];
 
         let videosLentes = [
-            '../../videos/tests/ter/exp/video1.mp4',
-            '../../videos/tests/ter/exp/video2.mp4',
-            '../../videos/tests/ter/exp/video3.mp4',
-            '../../videos/tests/ter/exp/video4.mp4',
-            '../../videos/tests/ter/exp/video5.mp4',
-            '../../videos/tests/ter/exp/video6.mp4',
-            '../../videos/tests/ter/exp/video7.mp4',
-            '../../videos/tests/ter/exp/video8.mp4',
-            '../../videos/tests/ter/exp/video9.mp4',
-            '../../videos/tests/ter/exp/video10.mp4'
+            '../../videos/tests/ter/exp/lent1.mp4',
+            '../../videos/tests/ter/exp/lent2.mp4',
+            '../../videos/tests/ter/exp/lent3.mp4',
+            '../../videos/tests/ter/exp/lent4.mp4',
+            '../../videos/tests/ter/exp/lent5.mp4',
+            '../../videos/tests/ter/exp/lent6.mp4',
+            '../../videos/tests/ter/exp/lent7.mp4',
+            '../../videos/tests/ter/exp/lent8.mp4',
+            '../../videos/tests/ter/exp/lent9.mp4',
+            '../../videos/tests/ter/exp/lent10.mp4',
+            '../../videos/tests/ter/exp/lent11.mp4',
+            '../../videos/tests/ter/exp/lent12.mp4',
+            '../../videos/tests/ter/exp/lent13.mp4',
+            '../../videos/tests/ter/exp/lent14.mp4',
+            '../../videos/tests/ter/exp/lent15.mp4'
         ];
 
-        const entries1 = [
-            "090da94e827106cfb4ad9969ab11cad5",
-            "35f0a2e0640fb54912a7cae046c38afa",
-            "45cac0b0b14ff5b97e19e76e717efb42",
-            "6d659da8b9b23a880e4960190d6a03d3",
-            "95c412d277eaa29cb623cfed90510987",
-            "b110493be3614b85ebc520972389d33a",
-            "cf4786dbe0c5364c9f7bd35cc4361fb2",
-            "f46af3aa92d2798c60372306121117bd"
-        ];
-        const entries2 = [
-            "0db4d0eedb7c90d402897ec3a07b622e",
+        const lent = [
+            "c569106554fab26ec9bfd1c2bac0026e",
             "3ccab13151283ac8319f8227b6fc371f",
-            "48d56e4fced14d48ed2b1f251e91cc86",
             "718c97066b84fbda905ebec987f1a15d",
-            "95d684a8e8aa7b27954dffd830531f44",
-            "b88122f1416f72a3520dd80a39c54f98",
-            "db41f791a0bb17f3c2f1a591a5aa710b",
-            "f4df54b579e3e92584edb2ea903d6a63"
-        ];
-        const entries3 = [
+            "35f0a2e0640fb54912a7cae046c38afa",
             "11f73087c3111e92cbb69fbb64a51a6b",
-            "3e1a4dddb02a6d483d80b794af8b527c",
+            "a79206cdd2ab64edf2f4d82852d4c721",
+            "cf4786dbe0c5364c9f7bd35cc4361fb2",
+            "b88122f1416f72a3520dd80a39c54f98",
+            "95c412d277eaa29cb623cfed90510987",
             "4c6c65ec8e29d30ff929deec96aa283f",
             "89ac3e398a2741e8faeeaf65478452e2",
+            "45cac0b0b14ff5b97e19e76e717efb42",
             "9639828edde5e997f76354ba8b2d143a",
-            "c17f9224d9a2c39d31f70d9637d23285",
-            "dfa19597e975cdad79d54577d66a1c43"
+            "48d56e4fced14d48ed2b1f251e91cc86",
+            "43edd7281886951680b32718bc540011"
         ];
-        const entries4 = [
+        const rapide = [
             "2ece41bc13c5c7579a2e29b94fce8ede",
-            "43edd7281886951680b32718bc540011",
+            "3e1a4dddb02a6d483d80b794af8b527c",
+            "db41f791a0bb17f3c2f1a591a5aa710b",
+            "b110493be3614b85ebc520972389d33a",
+            "090da94e827106cfb4ad9969ab11cad5",
+            "f46af3aa92d2798c60372306121117bd",
+            "0db4d0eedb7c90d402897ec3a07b622e",
+            "f4df54b579e3e92584edb2ea903d6a63",
+            "95d684a8e8aa7b27954dffd830531f44",
+            "6d659da8b9b23a880e4960190d6a03d3",
+            "dfa19597e975cdad79d54577d66a1c43",
+            "c17f9224d9a2c39d31f70d9637d23285",
+            "ec3476293f5c6f0480b17478d5aa90ba",
             "6a34a3ea2ed5262157368358adaff132",
-            "89acc3b76db28083ee172502666674ca",
-            "a79206cdd2ab64edf2f4d82852d4c721",
-            "c569106554fab26ec9bfd1c2bac0026e",
             "fdc8a4a1493908ac2fb940424e5e51a9"
         ];
 
@@ -451,46 +493,74 @@
         const ctx = canvas.getContext('2d');
 
         // Ajuster la taille du canvas
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = window.screen.width;
+        canvas.height = window.screen.height;
+
+        function shuffle(array) {
+            if (array.length === 2) {
+                // Randomly decide whether to swap the two elements
+                if (Math.random() < 0.5) {
+                    [array[0], array[1]] = [array[1], array[0]];
+                }
+            }
+            return array;
+        }
 
         function startTest() {
             const testCode = md5(document.getElementById('test-code').value);
 
-            if(entries1.indexOf(testCode) != -1) {
+            if(rapide.indexOf(testCode) != -1) {
                 currentTest = "1";
-            } else if(entries2.indexOf(testCode) != -1) {
+            } else if(lent.indexOf(testCode) != -1) {
                 currentTest = "2";
-            } else if(entries3.indexOf(testCode) != -1) {
-                currentTest = "3";
-            } else if(entries4.indexOf(testCode) != -1) {
-                currentTest = "4";
             }
 
             if (currentTest != null && !localStorage.getItem("user_test_code")) {
                 document.getElementById('welcome-screen').classList.add('hidden');
-                document.getElementById('form-qt').classList.remove('hidden');
+                document.getElementById('first_condition').classList.remove('hidden');
             } else {
                 alert("Numéro de test invalide, vous avez déjà participé ou votre participation a été révoquée.");
+            }
+        }
+
+        document.querySelectorAll('.toggle-input').forEach((input) => {
+            input.addEventListener('change', (event) => {
+                const targetId = event.target.getAttribute('data-target');
+                const detailsElement = document.getElementById(targetId);
+
+                if (event.target.value === "1" && event.target.checked) {
+                    detailsElement.classList.remove('hidden');
+                } else {
+                    detailsElement.classList.add('hidden');
+                }
+            });
+        });
+
+        function conditions(accept) {
+            if(accept) {
+                document.getElementById('first_condition').classList.add('hidden');
+                document.getElementById('form-qt').classList.remove('hidden');
+            } else {
+                alert("Merci de votre réponse.")
+                location.reload();
             }
         }
 
         function submitForm() {
             const form = document.getElementById('questionnaireForm');
             const alertMessage = document.getElementById('alertMessage');
+            const age_question = document.getElementById('age_question');
             alertMessage.textContent = ""; // Clear previous message
 
-            let totalPoints = 0;
             let allAnswered = true;
 
             // Parcourir les questions
-            ['q1', 'q2', 'q3', 'q4'].forEach(question => {
+            ['q1', 'q2', 'q5'].forEach(question => {
                 const radios = form.elements[question];
                 let answered = false;
 
                 for (let i = 0; i < radios.length; i++) {
                     if (radios[i].checked) {
-                        totalPoints += parseInt(radios[i].value, 10);
                         answered = true;
                         break;
                     }
@@ -501,6 +571,10 @@
                 }
             });
 
+            if(!age_question.value) {
+                allAnswered = false;
+            }
+
             if (!allAnswered) {
                 alertMessage.textContent = "Veuillez répondre à toutes les questions.";
                 return;
@@ -510,56 +584,28 @@
             localStorage.setItem("user_test_code", document.getElementById('test-code').value);
 
             // Vérification du score total
-            if (totalPoints > 2) { // Seuil ajustable selon vos critères
-                alert("Critères remplis ! Les conditions vont être affichées.");
-                showConditionsScreen(); // Fonction à implémenter pour afficher les conditions
-            } else {
-                alert("Désolé, vous ne correspondez pas aux critères pour participer.");
-                location.reload();  // Recharge la page pour recommencer
-            }
+            document.getElementById('form-qt').classList.add('hidden');
+            showConditionsScreen();
         }
 
         function showConditionsScreen() {
             document.getElementById('condition-screen').classList.remove('hidden');
 
-            let conditionText = "";
-            if (currentTest === "1") {
-                conditionText = "\nEnvironnement calme : Assurez-vous d'être dans un lieu exempt de distractions.\n\n Concentration exclusive : N'effectuez pas de prises de notes ni d'utilisation d'aides extérieures.\n\n Navigation web : Ne quittez pas la page de l'expérience sous peine d'annulation de participation.\n\n Durée : Prévoyez suffisamment de temps pour compléter l'expérience sans interruptions.\n\n Honnêteté : Soyez honnête dans vos réponses et actions, sans chercher à tromper les résultats.\n";
-                conditionSpec = "\n Condition rapide : Essayez d'atteindre les cercles le plus rapidement possible.";
-            } else if (currentTest === "2") {
-                conditionText = "\nEnvironnement calme : Assurez-vous d'être dans un lieu exempt de distractions.\n\n Concentration exclusive : N'effectuez pas de prises de notes ni d'utilisation d'aides extérieures.\n\n Navigation web : Ne quittez pas la page de l'expérience sous peine d'annulation de participation.\n\n Durée : Prévoyez suffisamment de temps pour compléter l'expérience sans interruptions.\n\n Honnêteté : Soyez honnête dans vos réponses et actions, sans chercher à tromper les résultats.\n";
-                conditionSpec = "\n Condition lente : Essayez d'atteindre les cercles de sorte à ce qu'un trait plein soit formé ; plus vous êtes rapides, moins il y a de points qui forment le trait.";
-            } else if (currentTest === "3") {
-                conditionText = "\nEnvironnement calme : Assurez-vous d'être dans un lieu exempt de distractions.\n\n Concentration exclusive : N'effectuez pas de prises de notes ni d'utilisation d'aides extérieures.\n\n Navigation web : Ne quittez pas la page de l'expérience sous peine d'annulation de participation.\n\n Durée : Prévoyez suffisamment de temps pour compléter l'expérience sans interruptions.\n\n Honnêteté : Soyez honnête dans vos réponses et actions, sans chercher à tromper les résultats.\n";
-                conditionSpec = "\n Condition vidéo rapide : Appuyez sur le bouton lorsque vous pensez que ça fait 1min que vous visionnez la vidéo.";
-            } else if (currentTest === "4") {
-                conditionText = "\nEnvironnement calme : Assurez-vous d'être dans un lieu exempt de distractions.\n\n Concentration exclusive : N'effectuez pas de prises de notes ni d'utilisation d'aides extérieures.\n\n Navigation web : Ne quittez pas la page de l'expérience sous peine d'annulation de participation.\n\n Durée : Prévoyez suffisamment de temps pour compléter l'expérience sans interruptions.\n\n Honnêteté : Soyez honnête dans vos réponses et actions, sans chercher à tromper les résultats.\n";
-                conditionSpec = "\n Condition vidéo lente : Appuyez sur le bouton lorsque vous pensez que ça fait 1min que vous visionnez la vidéo.";
-            }
+            let conditionText = "\nEnvironnement calme : Assurez-vous d'être dans un lieu exempt de distractions.\n\n Concentration exclusive : N'effectuez pas de prises de notes ni d'utilisation d'aides extérieures.\n\n Navigation web : Ne quittez pas la page de l'expérience sous peine d'annulation de participation.\n\n Durée : Prévoyez suffisamment de temps pour compléter l'expérience sans interruptions.\n\n Honnêteté : Soyez honnête dans vos réponses et actions, sans chercher à tromper les résultats.\n";
 
             document.getElementById('condition-text').innerText = conditionText;
-            document.getElementById('condition-spec-text').innerText = conditionSpec;
 
             // Activer le bouton si les conditions sont acceptées
             document.getElementById('accept-conditions').addEventListener('change', function () {
-                if(document.getElementById('condition-spec-text').classList.contains('hidden')) {
-                    document.getElementById('condition-spec-text').classList.remove('hidden');
-                    document.getElementById('condition-spec-label').classList.remove('hidden');
-
-                    document.getElementById('condition-text').classList.add('hidden');
-                    document.getElementById('condition-text-label').classList.add('hidden');
-
-                    document.getElementById('condition-spec').addEventListener('change', function () {
-                        document.getElementById('start-experiment').disabled = !this.checked;
-                    });
-                }
+                    document.getElementById('start-experiment').disabled = !this.checked;
             });
         }
 
         function launchExperiment() {
             document.getElementById('condition-screen').classList.add('hidden');
             document.getElementById('experiment-screen').classList.remove('hidden');
-            experimentStartTime = Date.now();
+            expOrder = shuffle(["visual", "motor"]);
+
             startTrial();  // Lancer le premier essai
             activateFullScreen();
             monitorFullScreenExit();
@@ -584,8 +630,8 @@
 
                     const speed = distance / timeDelta; // Vitesse en pixels par milliseconde
 
-                    // Condition lente (exemple : condition 2)
-                    if (code === 2 && speed > 0.8) {
+                    // Condition lente
+                    if (code === 2 && speed > 0.90) {
                         alertDiv.style.display = 'block'; // Affiche l'alerte
                         setTimeout(() => {
                             alertDiv.style.display = 'none'; // Cache après 1 secondes
@@ -602,26 +648,59 @@
         }
 
         function startTrial() {
-            if (trial >= maxTrials || (Date.now() - experimentStartTime) >= experimentDuration) {
+            if (trial > maxTrials) {
                 endExperiment();
-                return;
+                return; 
             }
 
-            trial++;
+            let counterTo = false;
 
-            document.getElementById('countdown').innerText = "Préparez vous...";
-            document.getElementById('countdown').classList.remove('hidden');
+            if (expOrder[0] === "visual" && trial - 1 < visualTrials + VtestTrials) {
+                if(visualDone === 0) {
+                    displayMessage(0);
+                    counterTo = true;
+                } 
+            } else if (expOrder[0] === "visual" && trial > visualTrials + VtestTrials) {
+                if(motorDone === 0) {
+                    displayMessage(1);
+                    counterTo = true;
+                } 
+            } else if (expOrder[0] === "motor" && trial - 1 < motorTrials + testTrials) {
+                if(motorDone === 0) {
+                    displayMessage(1);
+                    counterTo = true;
+                } 
+            } else if (expOrder[0] === "motor" && trial > motorTrials + testTrials) {
+                if(visualDone === 0) {
+                    displayMessage(0);
+                    counterTo = true;
+                } 
+            }
 
-            setTimeout(() => {
-                if(trial <= testTrials && document.getElementById('trial-number-training').classList.contains('hidden')) {
-                    document.getElementById('trial-number-training').classList.remove('hidden');
-                }
-                document.getElementById('trial-number').innerText = "Essai " + trial + " sur " + maxTrials;
-                document.getElementById('experiment-screen').classList.add('container3');
-                document.getElementById('experiment-screen').classList.remove('container');
-                document.getElementById('minute-button').classList.add('hidden');  // Cacher le bouton avant chaque compte à rebours
-                startCountdown();
-            }, 2000);
+            
+            if(!counterTo) {
+                document.getElementById('countdown').innerText = "Préparez vous...";
+                document.getElementById('countdown').classList.remove('hidden');
+
+                setTimeout(() => {
+                    if((
+                        (expOrder[0] === 'visual' && visualDone < VtestTrials) 
+                        || (expOrder[0] === 'motor' && motorDone < testTrials) 
+                        || (expOrder[1] === 'motor' && motorDone < testTrials && visualDone >= VtestTrials + visualTrials) 
+                        || (expOrder[1] === 'visual' && visualDone < VtestTrials && motorDone >= testTrials + motorTrials)) 
+                        && document.getElementById('trial-number-training').classList.contains('hidden')) {
+                        document.getElementById('trial-number-training').classList.remove('hidden');
+                    }
+                    document.getElementById('trial-number').innerText = "Essai " + trial + " sur " + maxTrials;
+                    document.getElementById('experiment-screen').classList.add('container3');
+                    document.getElementById('experiment-screen').classList.remove('container');
+                    document.getElementById('minute-button').classList.add('hidden');  // Cacher le bouton avant chaque compte à rebours
+
+                    startCountdown();
+                }, 2000);
+            }
+
+
         }
 
         function startCountdown() {
@@ -645,24 +724,80 @@
                     document.getElementById('experiment-screen').classList.add('container');
 
                     trialStartTime = Date.now();
+
                     runTrial();  // Lancer l'essai après le compte à rebours
                 }
             }, 1000);
         }
 
+        function validate() {
+            document.getElementById('message_btn').classList.add('hidden');
+            document.getElementById('message_container').classList.add('hidden');
+
+            document.getElementById('countdown').innerText = "Préparez vous...";
+            document.getElementById('countdown').classList.remove('hidden');
+
+            setTimeout(() => {
+                if((
+                    (expOrder[0] === 'visual' && visualDone < VtestTrials) 
+                    || (expOrder[0] === 'motor' && motorDone < testTrials) 
+                    || (expOrder[1] === 'motor' && motorDone < testTrials && visualDone >= VtestTrials + visualTrials) 
+                    || (expOrder[1] === 'visual' && visualDone < VtestTrials && motorDone >= testTrials + motorTrials)) 
+                    && document.getElementById('trial-number-training').classList.contains('hidden')) {
+                    document.getElementById('trial-number-training').classList.remove('hidden');
+                }
+                document.getElementById('trial-number').innerText = "Essai " + trial + " sur " + maxTrials;
+                document.getElementById('experiment-screen').classList.add('container3');
+                document.getElementById('experiment-screen').classList.remove('container');
+                document.getElementById('minute-button').classList.add('hidden');  // Cacher le bouton avant chaque compte à rebours
+
+                startCountdown();
+            }, 2000);
+        }
+
+        // no === 0 --> vidéo / no === 1 --> moteur / currentTest === '1' ---> rapide / currentTest === '2' ---> lent
+        function displayMessage(no) {
+            const messageDiv = document.getElementById('messsage_bf_condition');
+            const container = document.getElementById('message_container');
+
+            let message = '';
+
+            if(no === 0 && currentTest === '1') { // Vidéo rapide
+                message = "Vous regarderez des vidéos où une souris atteint un cercle. Vous devrez observer ces vidéos et, lorsque vous estimerez qu'une minute s'est écoulée, cliquer sur le bouton vert \"Je pense que ça fait une minute\" en bas à droite.";
+            } else if (no === 0 && currentTest === '2') { // Vidéo lent
+                message = "Vous regarderez des vidéos où une souris atteint un cercle. Vous devrez observer ces vidéos et, lorsque vous estimerez qu'une minute s'est écoulée, cliquer sur le bouton vert \"Je pense que ça fait une minute\" en bas à droite.";
+            } else if (no === 1 && currentTest === '1') { // Moteur rapide
+                message = "Vous verrez des cercles noirs à l'écran et vous devrez atteindre chaque cercle le plus rapidement possible en utilisant la souris. Vous devrez continuer à atteindre les cercles jusqu'à ce que vous pensiez qu'une minute se soit écoulée, puis cliquer sur le bouton \"Je pense que ça fait une minute\" en bas à droite. Vous aurez 3 essais d'entraînement avant de commencer.";
+            } else if (no === 1 && currentTest === '2') { // Moteur lent
+                message = "Vous verrez des cercles noirs à l'écran et devrez atteindre chaque cercle lentement avec la souris, de manière à former une ligne entre les cercles. Vous devrez continuer à atteindre les cercles jusqu'à ce que vous pensiez qu'une minute se soit écoulée, puis cliquer sur le bouton \"Je pense que ça fait une minute\" en bas à droite. Vous aurez 3 essais d'entraînement avant de commencer.";
+            }
+
+            messageDiv.innerHTML = message;
+            document.getElementById('message_btn').classList.remove('hidden');
+            container.classList.remove('hidden');
+        }
+
         function runTrial() {
             document.getElementById('countdown').classList.add('hidden');
             document.getElementById('trial-number').classList.add('hidden');
-            document.getElementById('minute-button').classList.remove('hidden');  // Afficher le bouton pendant l'essai
+            document.getElementById('minute-button').classList.remove('hidden');
 
-            if (currentTest === "3") {
-                playVideoTrial();  // Pour le test 3, jouer une vidéo
-            } else if (currentTest === "1") {
-                runCircleTrial();  // Pour le test 1, lancer le cercle aléatoire
-            } else if (currentTest === "2") {
-                runCircleTrial(); // Test 2
-            } else if (currentTest === "4") {
-                playVideoTrial(); // Test 4
+            if (expOrder[0] === "visual" && trial - 1 < visualTrials + VtestTrials) {
+                playVideoTrial();
+                videoTrial = true;
+                visualDone++;
+            } else if (expOrder[0] === "visual" && trial > visualTrials + VtestTrials) {
+                runCircleTrial();
+                videoTrial = false;
+                motorDone++;
+            } else if (expOrder[0] === "motor" && trial - 1 < motorTrials + testTrials) {
+                runCircleTrial();
+                videoTrial = false;
+                motorDone++;
+            } else if (expOrder[0] === "motor" && trial > motorTrials + testTrials) {
+                playVideoTrial();
+                videoTrial = true;
+                visualDone++;
             }
         }
 
@@ -695,7 +830,7 @@
         function playVideoTrial() {
             const videoElement = document.getElementById('experiment-video');
             
-            if(currentTest == "4") {
+            if(currentTest == "2") {
                 videoElement.src = videosLentes[videoIndex]
             } else {
                 videoElement.src = videos[videoIndex];
@@ -710,41 +845,30 @@
         }
 
         function endTrial() {
+            clearTimeout(trialTimer);  // Arrêter l'essai en cours
+
+            trial++;
+
+            if(videoTrial) {
+                const videoElement = document.getElementById('experiment-video');
+                videoElement.classList.add('hidden');
+                videoElement.pause();
+                videoIndex++;  // Passer à la vidéo suivante
+            } else {
+                const circle = document.getElementById('circle');
+                circle.style.visibility = 'hidden';
+            }
+
+            isDrawing = false;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
             // Calcul durée de l'essai
             trialEndTime = Date.now();
             trialDurations.push(trialEndTime - trialStartTime);  // Durée en millisecondes
 
-            document.getElementById('countdown').innerText = "Préparez vous...";
-            document.getElementById('countdown').classList.remove('hidden');
             document.getElementById('minute-button').classList.add('hidden');  // Cacher le bouton après l'essai
 
-            if (currentTest === "3" || currentTest === "4") {
-                const videoElement = document.getElementById('experiment-video');
-                videoElement.classList.add('hidden');
-                videoIndex++;  // Passer à la vidéo suivante
-            } else if (currentTest === "1" || currentTest === "2") {
-                const circle = document.getElementById('circle');
-                circle.style.visibility = 'hidden'; // Cacher le cercle
-            }
-
-            // Pause de 2 secondes entre les essais
-            betweenTrialsTimer = setTimeout(() => {
-                startTrial();  // Passer à l'essai suivant
-            }, 2000);
-        }
-
-        function endTrialEarly() {
-            clearTimeout(trialTimer);  // Arrêter l'essai en cours
-
-            if (currentTest === "3" || currentTest === "4") {
-                const videoElement = document.getElementById('experiment-video');
-                videoElement.pause();  // Mettre fin à la vidéo si c'est le test vidéo
-            } else if (currentTest === "1" || currentTest === "2") {
-                const circle = document.getElementById('circle');
-                circle.style.visibility = 'hidden';  // Cacher le cercle immédiatement
-            }
-
-            endTrial();  // Terminer l'essai immédiatement
+            startTrial();
         }
 
         function endExperiment() {
@@ -783,15 +907,97 @@
         }
 
         function sendEmail() {
-            let formattedResults = "";
-            for (let i = 0; i < trialDurations.length; i++) {
-                let duration = trialDurations[i];
-                if (i < testTrials) {
-                    formattedResults += `Essai ${i + 1} (Entrainement) : ${duration} millisecondes\n`;
-                } else {
-                    formattedResults += `Essai ${i + 1} : ${duration} millisecondes\n`;
+            let testCondition = currentTest === '1' ? 'rapide ' : 'lente '
+            let order = expOrder[0] === 'visuel' ? '(Entraînement Visuel > Visuel > Entraînement Moteur > Moteur)\n\n' : '(Entraînement Moteur > Moteur > Entraînement Visuel > Visuel)\n\n'
+            let formattedResults = "Condition " + testCondition + order;
+            let trouble1 = document.getElementById('trouble1');
+            let trouble2 = document.getElementById('trouble2');
+
+            if ((trouble1 && trouble1.value) || trouble2 && trouble2.value) {
+                formattedResults += "ATTENTION, CETTE PERSONNE A CES TROUBLES : ";
+
+                if (trouble1 && trouble1.value) {
+                    formattedResults += trouble1.value + " ";
+                }
+
+                if (trouble2 && trouble2.value) {
+                    formattedResults += trouble2.value + " ";
+                }
+                formattedResults += "\n\n";
+            }
+
+            let trialsTimes = [];
+            let VtrialsTimes = [];
+            let motorsTimes = [];
+            let visualsTimes = [];
+
+            const selectedOption = document.querySelector('input[name="q5"]:checked');
+
+            let result = "";
+            if (selectedOption) {
+                result = selectedOption.value;
+            }
+
+            formattedResults += "Participant n°" + document.getElementById('test-code').value + " : " + result + " de " + document.getElementById('age_question').value + 'ans\n\n';
+
+            let count = 0;
+
+            if(expOrder[0] === 'visual') {
+                formattedResults += "Visuel \n";
+                for (let i = count; i < visualTrials + VtestTrials; i++) {
+                    let duration = trialDurations[i];
+                    if (i < VtestTrials) {
+                        VtrialsTimes.push(duration);
+                        formattedResults += `Essai ${i + 1} (Entrainement) : ${duration} millisecondes\n`;
+                    } else {
+                        visualsTimes.push(duration);
+                        formattedResults += `Essai ${i + 1} : ${duration} millisecondes\n`;
+                    }
+                }
+                count = VtestTrials + visualTrials;
+
+                formattedResults += "\nMoteur \n";
+
+                for (let i = count; i < testTrials + motorTrials + count; i++) {
+                    let duration = trialDurations[i];
+                    if (i < testTrials + count) {
+                        trialsTimes.push(duration);
+                        formattedResults += `Essai ${i + 1} (Entrainement) : ${duration} millisecondes\n`;
+                    } else {
+                        motorsTimes.push(duration);
+                        formattedResults += `Essai ${i + 1} : ${duration} millisecondes\n`;
+                    }
+                }
+            } else if(expOrder[0] === 'motor') {
+                formattedResults += "Moteur \n";
+
+                for (let i = count; i < testTrials + motorTrials; i++) {
+                    let duration = trialDurations[i];
+                    if (i < testTrials) {
+                        trialsTimes.push(duration);
+                        formattedResults += `Essai ${i + 1} (Entrainement) : ${duration} millisecondes\n`;
+                    } else {
+                        motorsTimes.push(duration);
+                        formattedResults += `Essai ${i + 1} : ${duration} millisecondes\n`;
+                    }
+                }
+
+                count = testTrials + motorTrials;
+
+                formattedResults += "\nVisuel \n";
+                for (let i = count; i < visualTrials + VtestTrials + count; i++) {
+                    let duration = trialDurations[i];
+                    if (i < VtestTrials + count) {
+                        VtrialsTimes.push(duration);
+                        formattedResults += `Essai ${i + 1} (Entrainement) : ${duration} millisecondes\n`;
+                    } else {
+                        visualsTimes.push(duration);
+                        formattedResults += `Essai ${i + 1} : ${duration} millisecondes\n`;
+                    }
                 }
             }
+
+            formattedResults += "\n\nRécapitulatif des données : " + generateResultsLink(motorsTimes, visualsTimes, trialsTimes, VtrialsTimes);
 
             document.getElementById('countdown').classList.add('hidden');
 
@@ -813,6 +1019,21 @@
                 }
                 document.getElementById('countdown').classList.remove('hidden');
             });
+        }
+
+        function generateResultsLink(motors, visuals, trials, Vtrials) {
+            const motorsEncoded = encodeURIComponent(JSON.stringify(motors));
+            const visualsEncoded = encodeURIComponent(JSON.stringify(visuals));
+            const trialsEncoded = encodeURIComponent(JSON.stringify(trials));
+            const VtrialsEncoded = encodeURIComponent(JSON.stringify(Vtrials));
+            const speed = currentTest === "1" ? 'rapide' : 'lente';
+            
+            const basePath = "Axphyr.github.io/pages/Tests/results/index.html";
+
+            // Construction de l'URL
+            const url = `${basePath}?motors=${motorsEncoded}&visuals=${visualsEncoded}&trials=${trialsEncoded}&Vtrials=${VtrialsEncoded}&speed=${speed}`;
+            
+            return url;
         }
     </script>
 </body>
