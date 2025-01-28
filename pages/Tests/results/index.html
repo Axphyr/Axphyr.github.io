@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Résultats</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/simple-statistics@7.8.6/dist/simple-statistics.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -106,7 +107,6 @@
         <!-- Conteneur pour les graphiques -->
         <div id="charts-container"></div>
         <div id="chartsContainer"></div>
-
     </div>
 
     <script>
@@ -160,13 +160,14 @@
                 results.push({ motors, visuals, speed });
             }
 
-            if (results.length === 1) {
+            if (results.length === 1) { // Un seul lien
                 const speed = results[0].speed;
                 document.getElementById('results-title').textContent = `Résultats (condition ${speed})`;
                 displaySingleResults(results[0]);
-            } else {
+            } else { // Plusieurs liens
                 document.getElementById('results-title').textContent = 'Résultats';
                 displayComparisonResults(results);
+                console.log(results);
             }
         }
 
@@ -177,6 +178,15 @@
             chartsContainer.innerHTML = '';
 
             const createTable = (title, data) => {
+                const calculateStdDev = (values) => {
+                    const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
+                    const squaredDiffs = values.map(value => Math.pow(value - mean, 2));
+                    const meanSquaredDiff = squaredDiffs.reduce((sum, value) => sum + value, 0) / values.length;
+                    return Math.sqrt(meanSquaredDiff);
+                };
+
+                const stdDev = calculateStdDev(data.map(time => time / 1000)); // Conversion des millisecondes en secondes
+
                 const table = document.createElement('table');
                 table.innerHTML = `
                     <thead>
@@ -192,10 +202,14 @@
                             <tr>
                                 <td>${title} ${index + 1}</td>
                                 <td>${(time / 1000).toFixed(2)}</td>
-                                <td>${(60000 / 1000).toFixed(2)}</td>
-                                <td>${((time - 60000) / 1000).toFixed(2)}</td>
+                                <td>${(30000 / 1000).toFixed(2)}</td>
+                                <td>${((time - 30000) / 1000).toFixed(2)}</td>
                             </tr>
                         `).join('')}
+                        <tr>
+                            <td colspan="3"><strong>Écart type (Temps Réel)</strong></td>
+                            <td><strong>${stdDev.toFixed(2)}</strong></td>
+                        </tr>
                     </tbody>
                 `;
                 tablesContainer.appendChild(table);
@@ -206,6 +220,7 @@
 
             createLineChart('Temps Moteurs', data.motors.map(x => x / 1000), chartsContainer);
             createLineChart('Temps Visuels', data.visuals.map(x => x / 1000), chartsContainer);
+            createDoubleLineChart(data.motors.map(x => x / 1000), data.visuals.map(x => x / 1000), chartsContainer);
         }
 
         function createLineChart(title, data, container) {
@@ -223,6 +238,35 @@
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         fill: false
                     }]
+                },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        function createDoubleLineChart(motor, visuals, container) {
+            const canvas = document.createElement('canvas');
+            container.appendChild(canvas);
+
+            new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: motor.map((_, i) => `Essai ${i + 1}`),
+                    datasets: [
+                        {
+                        label: "Moteur",
+                        data: motor,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: false
+                    },
+                    {
+                        label: "Visuel",
+                        data: visuals,
+                        borderColor: 'rgb(192, 75, 75)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: false
+                    }
+                ]
                 },
                 options: { scales: { y: { beginAtZero: true } } }
             });
@@ -297,10 +341,151 @@
                 return table;
             };
 
+            const createMinMaxTable = (data) => {
+                const table = document.createElement('table');
+                table.classList.add('styled-table');
+
+                // Création de l'en-tête
+                const thead = table.createTHead();
+                const headerRow = thead.insertRow();
+                headerRow.innerHTML = `
+                    <th></th>
+                    <th>Moteur (s)</th>
+                    <th>Visuel (s)</th>
+                    <th>Rapide (s)</th>
+                    <th>Lent (s)</th>
+                `;
+
+                // Corps du tableau
+                const tbody = table.createTBody();
+
+                // Fonction pour calculer min et max combinés pour des tableaux
+                const calculateCombinedMinMax = (arrays) => {
+                    const combinedArray = arrays.flat(); // Fusionner les tableaux en un seul
+                    return {
+                        min: Math.min(...combinedArray),
+                        max: Math.max(...combinedArray),
+                    };
+                };
+
+                // Rassembler les données par type et par vitesse
+                const groupedData = {
+                    motors: [],
+                    visuals: [],
+                    rapide: [],
+                    lente: []
+                };
+
+                // Trier les données dynamiquement dans groupedData
+                data.forEach((item) => {
+                    groupedData.motors.push(...item.motors);
+                    groupedData.visuals.push(...item.visuals);
+                    if (item.speed === 'rapide') {
+                        groupedData.rapide.push(...item.motors, ...item.visuals);
+                    } else if (item.speed === 'lente') {
+                        groupedData.lente.push(...item.motors, ...item.visuals);
+                    }
+                });
+
+                // Calcul des min et max pour chaque catégorie
+                const minMaxData = {
+                    motors: calculateCombinedMinMax([groupedData.motors]),
+                    visuals: calculateCombinedMinMax([groupedData.visuals]),
+                    rapide: calculateCombinedMinMax([groupedData.rapide]),
+                    lente: calculateCombinedMinMax([groupedData.lente]),
+                };
+
+                // Ajouter la ligne des minima
+                const minRow = tbody.insertRow();
+                minRow.innerHTML = `
+                    <td><strong>Min</strong></td>
+                    <td>${minMaxData.motors.min/1000}</td>
+                    <td>${minMaxData.visuals.min/1000}</td>
+                    <td>${minMaxData.rapide.min/1000}</td>
+                    <td>${minMaxData.lente.min/1000}</td>
+                `;
+
+                // Ajouter la ligne des maxima
+                const maxRow = tbody.insertRow();
+                maxRow.innerHTML = `
+                    <td><strong>Max</strong></td>
+                    <td>${minMaxData.motors.max/1000}</td>
+                    <td>${minMaxData.visuals.max/1000}</td>
+                    <td>${minMaxData.rapide.max/1000}</td>
+                    <td>${minMaxData.lente.max/1000}</td>
+                `;
+
+                return table;
+            };
+
+            const createStdDevTable = (data) => {
+                const table = document.createElement('table');
+                table.classList.add('styled-table');
+
+                const thead = table.createTHead();
+                const headerRow = thead.insertRow();
+                headerRow.innerHTML = `
+                    <th></th>
+                    <th>Moteur</th>
+                    <th>Visuel</th>
+                    <th>Rapide</th>
+                    <th>Lent</th>
+                `;
+
+                const tbody = table.createTBody();
+
+                // Fonction pour calculer l'écart type
+                const calculateStdDev = (array) => {
+                    const mean = array.reduce((acc, val) => acc + val, 0) / array.length;
+                    const variance = array.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) / array.length;
+                    return Math.sqrt(variance);
+                };
+
+                const groupedData = {
+                    motors: [],
+                    visuals: [],
+                    rapide: [],
+                    lente: []
+                };
+
+                data.forEach(item => {
+                    groupedData.motors.push(...item.motors);
+                    groupedData.visuals.push(...item.visuals);
+                    if (item.speed === 'rapide') {
+                        groupedData.rapide.push(...item.motors, ...item.visuals);
+                    } else if (item.speed === 'lente') {
+                        groupedData.lente.push(...item.motors, ...item.visuals);
+                    }
+                });
+
+                const stdDevData = {
+                    motors: calculateStdDev(groupedData.motors),
+                    visuals: calculateStdDev(groupedData.visuals),
+                    rapide: calculateStdDev(groupedData.rapide),
+                    lente: calculateStdDev(groupedData.lente),
+                };
+
+                const stdDevRow = tbody.insertRow();
+                stdDevRow.innerHTML = `
+                    <td><strong>Écart type</strong></td>
+                    <td>${(stdDevData.motors/1000).toFixed(2)}</td>
+                    <td>${(stdDevData.visuals/1000).toFixed(2)}</td>
+                    <td>${(stdDevData.rapide/1000).toFixed(2)}</td>
+                    <td>${(stdDevData.lente/1000).toFixed(2)}</td>
+                `;
+
+                return table;
+            };
+
+
             const conditionTable = createConditionTable(averages);
             const comparisonTable = createComparisonTable(averages);
+            const comparisonMinMax = createMinMaxTable(results);
+            const comparisonStdDev = createStdDevTable(results);
             tablesContainer.appendChild(conditionTable);
             tablesContainer.appendChild(comparisonTable);
+            tablesContainer.appendChild(comparisonMinMax);
+            tablesContainer.appendChild(comparisonStdDev);
 
             const createLineChart = (type, data) => {
                 const ctx = document.createElement('canvas');
