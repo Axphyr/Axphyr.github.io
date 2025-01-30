@@ -302,7 +302,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        #next-button {
+        .next-button {
             margin-top: 20px;
             padding: 10px 20px;
             font-size: 16px;
@@ -314,7 +314,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        #next-button:hover {
+        .next-button:hover {
             background-color: #218838;
         }
 
@@ -464,7 +464,7 @@
         <div class="number-container">
             <!-- Les nombres seront générés ici -->
         </div>
-        <button id="next-button" onclick="validateNumbers()">Suite</button>
+        <button class="next-button" onclick="validateNumbers()">Suite</button>
     </div>
 
     <div class="container4 hidden" id="input-container">
@@ -478,7 +478,7 @@
             <input type="number" class="number-input">
             <input type="number" class="number-input">
         </div>
-        <button id="next-button" onclick="validateInputs()">Valider</button>
+        <button class="next-button" id="next-button" onclick="validateInputs()">Valider</button>
     </div>
     
     <!-- Bouton "Je pense que ça fait 30 secondes" -->
@@ -857,6 +857,33 @@
             }, 1000);
         }
 
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputs = document.querySelectorAll(".number-input");
+            const button = document.getElementById("next-button");
+
+            function checkInputs() {
+                const allFilled = Array.from(inputs).every(input => input.value.trim() !== "");
+                button.disabled = !allFilled;
+            }
+
+            inputs.forEach((input, index) => {
+                input.addEventListener("input", (event) => {
+                    if (event.target.value.length > 0 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                    checkInputs();
+                });
+
+                input.addEventListener("keydown", (event) => {
+                    if (event.key === "Backspace" && input.value.length === 0 && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+            });
+
+            checkInputs();
+        });
+
         function validateInputs() {
             if(trial > maxTrials) {
                 document.getElementById('input-container').classList.add('hidden');
@@ -883,8 +910,6 @@
                 
                 document.getElementById('message_btn').classList.remove('hidden');
                 document.getElementById('message_container').classList.remove('hidden');
-            } else {
-                alert('Veuillez remplir tous les champs avec des chiffres valides.');
             }
         }
 
