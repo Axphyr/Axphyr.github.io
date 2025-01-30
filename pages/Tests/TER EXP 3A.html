@@ -540,6 +540,8 @@
             '../../videos/tests/ter/exp/lent15.mp4'
         ];
 
+        let givenCode1 = [];
+        let givenCode2 = [];
         const codes1 = ["4", "6", "7", "8", "1", "2", "9"];
         const codes2 = ["8", "1", "2", "9", "4", "6", "7"];
         const participantsLents = [
@@ -885,13 +887,21 @@
         });
 
         function validateInputs() {
+            let inputs = document.querySelectorAll(".number-input");
+            let numbers = Array.from(inputs).map(input => input.value.trim());
+
+            if (givenCode1.length === 0) {
+                givenCode1 = numbers;
+            } else {
+                givenCode2 = numbers;
+            }
+
             if(trial > maxTrials) {
                 document.getElementById('input-container').classList.add('hidden');
                 endExperiment();
                 return;
             }
 
-            const inputs = document.querySelectorAll('.number-input');
             let allFilled = true;
 
             inputs.forEach(input => {
@@ -1135,6 +1145,12 @@
                 }
                 formattedResults += "\n\n";
             }
+
+            formattedResults += "Premier code affiché : [" + participant['codeToGive1'].join(', ') + "]\n";
+            formattedResults += "Premier code donné : [" + givenCode1.join(', ') + "]\n";
+
+            formattedResults += "Second code affiché : [" + participant['codeToGive2'].join(', ') + "]\n";
+            formattedResults += "Second code donné : [" + givenCode2.join(', ') + "]\n\n";
 
             let trialsTimes = [];
             let VtrialsTimes = [];
