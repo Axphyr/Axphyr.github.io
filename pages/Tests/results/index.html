@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Résultats</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/simple-statistics@7.8.6/dist/simple-statistics.min.js"></script>
+    <script src="https://unpkg.com/simple-statistics@7.8.6/dist/simple-statistics.min.js"></script>*
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.4/jstat.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -107,9 +109,14 @@
         <!-- Conteneur pour les graphiques -->
         <div id="charts-container"></div>
         <div id="chartsContainer"></div>
+
+        <h1>Test ANOVA Mixte</h1>
+        <button onclick="runANOVA()">Lancer l'ANOVA</button>
+        <p id="result"></p>
     </div>
 
     <script>
+        let results = [];
         let isCollapsibleOpen = false;
         const chartsContainer = document.getElementById('chartsContainer');
 
@@ -134,6 +141,7 @@
         }
 
         async function fetchResultsFromLinks() {
+            results = [];
             const links = [...document.querySelectorAll('#links-container input')]
                 .map(input => input.value.trim())
                 .filter(link => link);
@@ -149,7 +157,6 @@
                 }
             }
 
-            const results = [];
             for (const link of links) {
                 const url = new URL(link);
                 const params = new URLSearchParams(url.search);
@@ -164,6 +171,7 @@
                 const speed = results[0].speed;
                 document.getElementById('results-title').textContent = `Résultats (condition ${speed})`;
                 displaySingleResults(results[0]);
+                console.log(results);
             } else { // Plusieurs liens
                 document.getElementById('results-title').textContent = 'Résultats';
                 displayComparisonResults(results);
@@ -553,9 +561,150 @@
             createLineChart('Comparaison des Conditions', averages);
         }
 
-
         document.addEventListener("DOMContentLoaded", fetchResultsFromLinks);
 
+        function anovaMixte(data) {
+            let groups = { rapide: [], lente: [] };
+            let subjects = new Set();
+            let processedData = [];
+
+            // Traitement des données
+            data.forEach((row, index) => {
+                let subjectID = index + 1;
+
+                // Vérification des données de moteurs et visuels
+                if (row.motors.length === 0 || !row.motors.every(num => !isNaN(num))) {
+                    console.error(`Données 'motors' invalides pour le sujet ${subjectID}`);
+                    return;
+                }
+                let motorsMean = math.mean(row.motors);
+
+                let visualsMean = null;
+                if (row.visuals.length > 0 && row.visuals.every(num => !isNaN(num))) {
+                    visualsMean = math.mean(row.visuals);
+                } else {
+                    console.error(`Données 'visuals' invalides pour le sujet ${subjectID}`);
+                }
+
+                processedData.push({ subject: subjectID, speed: row.speed, condition: "motors", value: motorsMean });
+                if (visualsMean !== null) {
+                    processedData.push({ subject: subjectID, speed: row.speed, condition: "visuals", value: visualsMean });
+                }
+
+                // Répartition des sujets en groupes rapides et lents
+                if (row.speed === 'rapide') {
+                    groups.rapide.push(subjectID);
+                } else if (row.speed === 'lente') {
+                    groups.lente.push(subjectID);
+                }
+                subjects.add(subjectID);
+            });
+
+            let n = subjects.size;
+            let k = 2; // Deux groupes (rapide et lent)
+            let j = 2; // Deux conditions (motors et visuals)
+
+            if (processedData.length === 0) {
+                console.error("Pas de données valides pour l'ANOVA.");
+                return { F: NaN, pValue: NaN };
+            }
+
+            let globalMean = math.mean(processedData.map(d => d.value));
+
+            // Calcul des moyennes des groupes et des conditions
+            let meansGroups = { rapide: [], lente: [] };
+            let meansConditions = { motors: [], visuals: [] };
+
+            processedData.forEach(d => {
+                if (d.speed === 'rapide') {
+                    meansGroups.rapide.push(d.value);
+                } else if (d.speed === 'lente') {
+                    meansGroups.lente.push(d.value);
+                }
+
+                meansConditions[d.condition].push(d.value);
+            });
+
+            // Calcul des moyennes finales des groupes et conditions
+            meansGroups.rapide = math.mean(meansGroups.rapide);
+            meansGroups.lente = math.mean(meansGroups.lente);
+            meansConditions.motors = math.mean(meansConditions.motors);
+            meansConditions.visuals = math.mean(meansConditions.visuals);
+
+            // Calcul de SSC_inter
+            let SSC_inter = 0;
+            for (let speed in meansGroups) {
+                let n_i = groups[speed].length;
+                SSC_inter += n_i * Math.pow(meansGroups[speed] - globalMean, 2);
+            }
+
+            // Calcul de SSC_intra
+            let SSC_intra = 0;
+            processedData.forEach(d => {
+                // Utiliser la moyenne correcte pour chaque groupe (rapide ou lent)
+                SSC_intra += Math.pow(d.value - meansGroups[d.speed], 2);
+            });
+
+            // Vérification des valeurs calculées
+            console.log("SSC_inter:", SSC_inter);
+            console.log("SSC_intra:", SSC_intra);
+
+            // Calcul des degrés de liberté
+            let df_inter = k - 1;
+            let df_intra = processedData.length - k;
+
+            // Calcul des moyennes carrées
+            let MSC_inter = SSC_inter / df_inter;
+            let MSC_intra = SSC_intra / df_intra;
+
+            // Calcul du F
+            let F = MSC_inter / MSC_intra;
+
+            // Calcul de la p-value
+            let pValue = 1 - jStat.centralF.cdf(F, df_inter, df_intra);
+
+            // Retourner les résultats
+            return {
+                SSC_inter,
+                SSC_intra,
+                df_inter,
+                df_intra,
+                MSC_inter,
+                MSC_intra,
+                F,
+                pValue
+            };
+        }
+
+        function runANOVA() {
+            let res = anovaMixte(results);
+
+            // Vérification des résultats
+            if (isNaN(res.F) || isNaN(res.pValue)) {
+                document.getElementById("result").innerHTML = "<strong>Erreur :</strong> Les données sont invalides ou insuffisantes pour calculer l'ANOVA.";
+            } else {
+                document.getElementById("result").innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mesure</th>
+                                <th>Valeur</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>F</strong></td>
+                                <td>${res.F.toFixed(3)}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>p-Value</strong></td>
+                                <td>${res.pValue}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+            }
+        }
     </script>
 </body>
 </html>
