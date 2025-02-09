@@ -116,7 +116,7 @@
     </div>
 
     <script>
-        let results = [];
+        let dataRes = [];
         let isCollapsibleOpen = false;
         const chartsContainer = document.getElementById('chartsContainer');
 
@@ -141,7 +141,7 @@
         }
 
         async function fetchResultsFromLinks() {
-            results = [];
+            dataRes = [];
             const links = [...document.querySelectorAll('#links-container input')]
                 .map(input => input.value.trim())
                 .filter(link => link);
@@ -157,6 +157,7 @@
                 }
             }
 
+            const results = [];
             for (const link of links) {
                 const url = new URL(link);
                 const params = new URLSearchParams(url.search);
@@ -165,6 +166,7 @@
                 const visuals = params.get('visuals') ? JSON.parse(decodeURIComponent(params.get('visuals'))) : [];
                 const speed = params.get('speed') || 'Inconnu';
                 results.push({ motors, visuals, speed });
+                dataRes.push({ motors, visuals, speed });
             }
 
             if (results.length === 1) { // Un seul lien
@@ -280,20 +282,47 @@
             });
         }
 
+        function calculateAverages(results) {
+            const averages = { rapide: { motors: [], visuals: [] }, lente: { motors: [], visuals: [] } };
+
+            results.forEach(({ motors, visuals, speed }) => {
+                let motorAvg = 0;
+                motors.forEach(value => motorAvg += value);
+                motorAvg /= motors.length;
+
+                let visualAvg = 0;
+                visuals.forEach(value => visualAvg += value);
+                visualAvg /= visuals.length;
+
+                if (speed === 'rapide') {
+                    averages.rapide.motors.push(motorAvg);
+                    averages.rapide.visuals.push(visualAvg);
+                } else if (speed === 'lente') {
+                    averages.lente.motors.push(motorAvg);
+                    averages.lente.visuals.push(visualAvg);
+                }
+            });
+
+            const finalAverages = {
+                rapide: {
+                    motors: averages.rapide.motors.length > 1 ? [averages.rapide.motors.reduce((sum, value) => sum + value, 0) / averages.rapide.motors.length] : [averages.rapide.motors[0]] || [0],
+                    visuals: averages.rapide.visuals.length > 1 ? [averages.rapide.visuals.reduce((sum, value) => sum + value, 0) / averages.rapide.visuals.length] : [averages.rapide.visuals[0]] || [0]
+                },
+                lente: {
+                    motors: averages.lente.motors.length > 1 ? [averages.lente.motors.reduce((sum, value) => sum + value, 0) / averages.lente.motors.length] : [averages.lente.motors[0]] || [0],
+                    visuals: averages.lente.visuals.length > 1 ? [averages.lente.visuals.reduce((sum, value) => sum + value, 0) / averages.lente.visuals.length] : [averages.lente.visuals[0]] || [0]
+                }
+            };
+
+            return finalAverages;
+        }
+
+
         function displayComparisonResults(results) {
             const tablesContainer = document.getElementById('tables-container');
             const chartsContainer = document.getElementById('charts-container');
             tablesContainer.innerHTML = '';
             chartsContainer.innerHTML = '';
-
-            const averages = results.reduce((acc, { motors, visuals, speed }) => {
-                const motorAvg = motors.reduce((a, b) => a + b, 0) / motors.length;
-                const visualAvg = visuals.reduce((a, b) => a + b, 0) / visuals.length;
-                acc[speed] = acc[speed] || { motors: [], visuals: [] };
-                acc[speed].motors.push(motorAvg);
-                acc[speed].visuals.push(visualAvg);
-                return acc;
-            }, {});
 
             const createConditionTable = (data) => {
                 const table = document.createElement('table');
@@ -485,7 +514,7 @@
                 return table;
             };
 
-
+            const averages = calculateAverages(results);
             const conditionTable = createConditionTable(averages);
             const comparisonTable = createComparisonTable(averages);
             const comparisonMinMax = createMinMaxTable(results);
@@ -568,11 +597,9 @@
             let subjects = new Set();
             let processedData = [];
 
-            // Traitement des données
             data.forEach((row, index) => {
                 let subjectID = index + 1;
 
-                // Vérification des données de moteurs et visuels
                 if (row.motors.length === 0 || !row.motors.every(num => !isNaN(num))) {
                     console.error(`Données 'motors' invalides pour le sujet ${subjectID}`);
                     return;
@@ -591,7 +618,6 @@
                     processedData.push({ subject: subjectID, speed: row.speed, condition: "visuals", value: visualsMean });
                 }
 
-                // Répartition des sujets en groupes rapides et lents
                 if (row.speed === 'rapide') {
                     groups.rapide.push(subjectID);
                 } else if (row.speed === 'lente') {
@@ -601,8 +627,8 @@
             });
 
             let n = subjects.size;
-            let k = 2; // Deux groupes (rapide et lent)
-            let j = 2; // Deux conditions (motors et visuals)
+            let k = 2;
+            let j = 2;
 
             if (processedData.length === 0) {
                 console.error("Pas de données valides pour l'ANOVA.");
@@ -611,7 +637,6 @@
 
             let globalMean = math.mean(processedData.map(d => d.value));
 
-            // Calcul des moyennes des groupes et des conditions
             let meansGroups = { rapide: [], lente: [] };
             let meansConditions = { motors: [], visuals: [] };
 
@@ -625,45 +650,32 @@
                 meansConditions[d.condition].push(d.value);
             });
 
-            // Calcul des moyennes finales des groupes et conditions
             meansGroups.rapide = math.mean(meansGroups.rapide);
             meansGroups.lente = math.mean(meansGroups.lente);
             meansConditions.motors = math.mean(meansConditions.motors);
             meansConditions.visuals = math.mean(meansConditions.visuals);
 
-            // Calcul de SSC_inter
             let SSC_inter = 0;
             for (let speed in meansGroups) {
                 let n_i = groups[speed].length;
                 SSC_inter += n_i * Math.pow(meansGroups[speed] - globalMean, 2);
             }
 
-            // Calcul de SSC_intra
             let SSC_intra = 0;
             processedData.forEach(d => {
-                // Utiliser la moyenne correcte pour chaque groupe (rapide ou lent)
                 SSC_intra += Math.pow(d.value - meansGroups[d.speed], 2);
             });
 
-            // Vérification des valeurs calculées
-            console.log("SSC_inter:", SSC_inter);
-            console.log("SSC_intra:", SSC_intra);
-
-            // Calcul des degrés de liberté
             let df_inter = k - 1;
             let df_intra = processedData.length - k;
 
-            // Calcul des moyennes carrées
             let MSC_inter = SSC_inter / df_inter;
             let MSC_intra = SSC_intra / df_intra;
 
-            // Calcul du F
             let F = MSC_inter / MSC_intra;
 
-            // Calcul de la p-value
             let pValue = 1 - jStat.centralF.cdf(F, df_inter, df_intra);
 
-            // Retourner les résultats
             return {
                 SSC_inter,
                 SSC_intra,
@@ -679,7 +691,6 @@
         function runANOVA() {
             let res = anovaMixte(results);
 
-            // Vérification des résultats
             if (isNaN(res.F) || isNaN(res.pValue)) {
                 document.getElementById("result").innerHTML = "<strong>Erreur :</strong> Les données sont invalides ou insuffisantes pour calculer l'ANOVA.";
             } else {
