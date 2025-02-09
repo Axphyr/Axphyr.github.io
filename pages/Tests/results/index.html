@@ -689,7 +689,7 @@
         }
 
         function runANOVA() {
-            let res = anovaMixte(results);
+            let res = anovaMixte(dataRes);
 
             if (isNaN(res.F) || isNaN(res.pValue)) {
                 document.getElementById("result").innerHTML = "<strong>Erreur :</strong> Les données sont invalides ou insuffisantes pour calculer l'ANOVA.";
