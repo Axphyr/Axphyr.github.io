@@ -8,6 +8,8 @@
     <script src="https://unpkg.com/simple-statistics@7.8.6/dist/simple-statistics.min.js"></script>*
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.4/jstat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -87,6 +89,32 @@
             flex: 1;
             margin-right: 5px;
         }
+
+        #CSV-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            max-width: 300px;
+        }
+
+        #Excel-button {
+            position: fixed;
+            top: 20px;
+            right: 85px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            max-width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -114,6 +142,8 @@
         <button onclick="runANOVA()">Lancer l'ANOVA</button>
         <p id="result"></p>
     </div>
+    <button id="CSV-button" onclick="downloadCSV()" style="font-size: larger;">.csv</button>
+    <button id="Excel-button" onclick="downloadExcel()" style="font-size: larger;">.xlsx</button>
 
     <script>
         let dataRes = [];
@@ -165,8 +195,9 @@
                 const motors = params.get('motors') ? JSON.parse(decodeURIComponent(params.get('motors'))) : [];
                 const visuals = params.get('visuals') ? JSON.parse(decodeURIComponent(params.get('visuals'))) : [];
                 const speed = params.get('speed') || 'Inconnu';
-                results.push({ motors, visuals, speed });
-                dataRes.push({ motors, visuals, speed });
+                const nr = params.get('nr') || 'NOT GIVEN';
+                results.push({ motors, visuals, speed, nr });
+                dataRes.push({ motors, visuals, speed, nr });
             }
 
             if (results.length === 1) { // Un seul lien
@@ -715,6 +746,80 @@
                     </table>
                 `;
             }
+        }
+
+        function downloadExcel() {
+            // Fonction pour calculer la moyenne d'une liste
+            function average(arr) {
+                return arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+            }
+
+            // Données du tableau
+            const data = [
+                ["Participants", "Vitesse", "Mouvements", "Visuel", "Moyenne générale"] // En-têtes
+            ];
+
+            // Remplissage des données
+            dataRes.forEach(item => {
+                data.push([
+                    item.nr ?? "NOT GIVEN",     // Participants
+                    item.speed,                 // Vitesse
+                    average(item.motors),       // Moyenne des mouvements
+                    average(item.visuals),      // Moyenne du visuel
+                    (average(item.visuals)      // Moyenne générale
+                    + average(item.motors)) / 2
+                ]);
+            });
+
+            // Création d'une feuille Excel
+            const ws = XLSX.utils.aoa_to_sheet(data);
+
+            // Création d'un classeur
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Feuille1");
+
+            // Générer un fichier Excel et déclencher le téléchargement
+            XLSX.writeFile(wb, "data.xlsx");
+        }
+
+        function downloadCSV() {
+            // Fonction pour calculer la moyenne d'une liste
+            function average(arr) {
+                return arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+            }
+            
+            // Création du tableau de données
+            const data = [
+                ["Participants", "Vitesse", "Mouvements", "Visuel", "Moyenne générale"] // En-têtes
+            ];
+
+            // Remplissage des données
+            dataRes.forEach(item => {
+                data.push([
+                    item.nr ?? "NOT GIVEN",     // Participants
+                    item.speed,                 // Vitesse
+                    average(item.motors),       // Moyenne des mouvements
+                    average(item.visuals),      // Moyenne du visuel
+                    (average(item.visuals)      // Moyenne générale
+                    + average(item.motors)) / 2
+                ]);
+            });
+            
+            // Convertir en CSV (chaîne de caractères)
+            const csvContent = data.map(row => row.join(",")).join("\n");
+
+            // Créer un Blob
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+
+            // Créer un lien de téléchargement
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "data.csv";
+
+            // Simuler un clic pour télécharger
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
