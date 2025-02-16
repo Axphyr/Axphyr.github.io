@@ -754,9 +754,16 @@
                 return arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
             }
 
+            // Fonction pour calculer le ratio par rapport à 30 secondes
+            function ratio(arr) {
+                return arr.length ? 
+                    arr.map(time => Math.abs((time - 30_000) / 30_000) * 100) // Calcul du ratio pour chaque valeur
+                    .reduce((a, b) => a + b, 0) / arr.length : 0;  // Moyenne des ratios
+            }
+
             // Données du tableau
             const data = [
-                ["Participants", "Vitesse", "Mouvements", "Visuel", "Moyenne générale"] // En-têtes
+                ["Participants", "Vitesse", "Mouvements", "Visuel", "Moyenne Générale", "Ratio Moteur", "Ratio Visuel", "Ratio Global"]
             ];
 
             // Remplissage des données
@@ -767,7 +774,11 @@
                     average(item.motors),       // Moyenne des mouvements
                     average(item.visuals),      // Moyenne du visuel
                     (average(item.visuals)      // Moyenne générale
-                    + average(item.motors)) / 2
+                    + average(item.motors)) / 2,
+                    ratio(item.motors),         // Ratio Moteur
+                    ratio(item.visuals)  ,      // Ratio Visuel
+                    (ratio(item.visuals)        // Ratio général
+                    + ratio(item.motors)) / 2
                 ]);
             });
 
@@ -787,10 +798,17 @@
             function average(arr) {
                 return arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
             }
+
+            // Fonction pour calculer le ratio par rapport à 30 secondes
+            function ratio(arr) {
+                return arr.length ? 
+                    arr.map(time => Math.abs((time - 30_000) / 30_000) * 100) // Calcul du ratio pour chaque valeur
+                    .reduce((a, b) => a + b, 0) / arr.length : 0;  // Moyenne des ratios
+            }
             
             // Création du tableau de données
             const data = [
-                ["Participants", "Vitesse", "Mouvements", "Visuel", "Moyenne générale"] // En-têtes
+                ["Participants", "Vitesse", "Mouvements", "Visuel", "Moyenne Générale", "Ratio Moteur", "Ratio Visuel", "Ratio Global"]
             ];
 
             // Remplissage des données
@@ -801,7 +819,11 @@
                     average(item.motors),       // Moyenne des mouvements
                     average(item.visuals),      // Moyenne du visuel
                     (average(item.visuals)      // Moyenne générale
-                    + average(item.motors)) / 2
+                    + average(item.motors)) / 2,
+                    ratio(item.motors),         // Ratio Moteur
+                    ratio(item.visuals)  ,      // Ratio Visuel
+                    (ratio(item.visuals)        // Ratio général
+                    + ratio(item.motors)) / 2
                 ]);
             });
             
