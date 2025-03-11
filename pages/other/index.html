@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Interactive</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            color: #333;
+        }
+        #name-prompt, #question-container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff7675;
+            color: white;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #d63031;
+        }
+        #oui img {
+            width: 200px;
+            height: 150px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #video-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90vw;
+            height: 90vh;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="name-prompt">
+        <label for="name">Entrez votre prénom :</label>
+        <input type="text" id="name">
+        <button onclick="startGame()">Valider</button>
+    </div>
+    
+    <div id="question-container" style="display: none;">
+        <h1 id="question"></h1>
+        <button id="oui" onclick="handleYes()">Oui</button>
+        <button id="non" onclick="handleNo()">Non</button>
+    </div>
+    
+    <div id="video-container">
+        <video id="video" autoplay>
+            <source src="monday.mp4" type="video/mp4" >
+            Votre navigateur ne supporte pas la lecture vidéo.
+        </video>
+    </div>
+    
+    <script>
+        let ouiCount = 0;
+        
+        function startGame() {
+            const name = document.getElementById("name").value.trim();
+            if (name) {
+                document.getElementById("name-prompt").style.display = "none";
+                document.getElementById("question-container").style.display = "block";
+                document.getElementById("question").innerText = `Bonjour ${name} Caca, l'ACEP est-elle meilleure que PSYCHX ?`;
+            }
+        }
+        
+        function handleYes() {
+            ouiCount++;
+            const ouiButton = document.getElementById("oui");
+            
+            if (ouiCount === 1) {
+                ouiButton.style.position = "absolute";
+                moveButton();
+            } else if (ouiCount === 2) {
+                const img = document.createElement("img");
+                img.src = "ddh.png";
+                ouiButton.appendChild(img);
+            } else if (ouiCount === 3) {
+                document.getElementById("question-container").style.display = "none";
+                document.getElementById("video-container").style.display = "block";
+                document.getElementById("video").play();
+            } else {
+                moveButton();
+            }
+        }
+        
+        function handleNo() {
+            document.getElementById("non").style.display = "none";
+        }
+        
+        function moveButton() {
+            const ouiButton = document.getElementById("oui");
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 50);
+            ouiButton.style.left = `${x}px`;
+            ouiButton.style.top = `${y}px`;
+        }
+    </script>
+</body>
+</html>

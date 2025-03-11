@@ -775,10 +775,10 @@
                     (average(item.visuals) / 60).toFixed(2),         // Moyenne du visuel
                     (((average(item.visuals)                         // Moyenne générale
                     + average(item.motors)) / 2) / 60).toFixed(2),
-                    (ratio(item.motors) / 60).toFixed(2),            // Ratio Moteur
-                    (ratio(item.visuals) / 60).toFixed(2),           // Ratio Visuel
-                    (((ratio(item.visuals)                           // Ratio général
-                    + ratio(item.motors)) / 2) / 60).toFixed(2)
+                    ratio(item.motors),                              // Ratio Moteur
+                    ratio(item.visuals) / 60,                        // Ratio Visuel
+                    (ratio(item.visuals)                             // Ratio général
+                    + ratio(item.motors)) / 2
                 ]);
             });
 
