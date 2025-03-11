@@ -33,6 +33,7 @@
             background-color: #ff7675;
             color: white;
             transition: background 0.3s;
+            position: relative;
         }
         button:hover {
             background-color: #d63031;
@@ -42,7 +43,7 @@
             height: 150px;
             position: absolute;
             top: 50%;
-            left: 50%;
+            left: 150%;
             transform: translate(-50%, -50%);
         }
         #video-container {
@@ -82,9 +83,12 @@
     
     <script>
         let ouiCount = 0;
-        
+        let done = false;
+        const ouiButton = document.getElementById("oui");
+        let name = "";
+
         function startGame() {
-            const name = document.getElementById("name").value.trim();
+            name = document.getElementById("name").value.trim();
             if (name) {
                 document.getElementById("name-prompt").style.display = "none";
                 document.getElementById("question-container").style.display = "block";
@@ -97,18 +101,14 @@
             const ouiButton = document.getElementById("oui");
             
             if (ouiCount === 1) {
-                ouiButton.style.position = "absolute";
-                moveButton();
-            } else if (ouiCount === 2) {
                 const img = document.createElement("img");
                 img.src = "ddh.png";
                 ouiButton.appendChild(img);
-            } else if (ouiCount === 3) {
+                document.getElementById("question").innerText = `Es-tu sûr, ${name} Caca ?`;
+            } else if (ouiCount === 2) {
                 document.getElementById("question-container").style.display = "none";
                 document.getElementById("video-container").style.display = "block";
                 document.getElementById("video").play();
-            } else {
-                moveButton();
             }
         }
         
@@ -116,13 +116,20 @@
             document.getElementById("non").style.display = "none";
         }
         
-        function moveButton() {
-            const ouiButton = document.getElementById("oui");
-            const x = Math.random() * (window.innerWidth - 100);
-            const y = Math.random() * (window.innerHeight - 50);
-            ouiButton.style.left = `${x}px`;
-            ouiButton.style.top = `${y}px`;
+        function moveButton() { 
+            if(!done) {
+                const maxX = window.innerWidth - ouiButton.offsetWidth - 100;
+                const maxY = window.innerHeight - ouiButton.offsetHeight;
+                const x = Math.random() * maxX;
+                const y = Math.random() * maxY;
+                ouiButton.style.position = "absolute";
+                ouiButton.style.left = `${x}px`;
+                ouiButton.style.top = `${y}px`;
+                done = true;
+            }
         }
+
+        ouiButton.addEventListener("mouseover", moveButton);
     </script>
 </body>
 </html>
